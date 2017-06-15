@@ -18,7 +18,7 @@ class IndexView(generic.ListView):
         但是并不返回哪些被设置文以后将要发表的投票
         '''
         return Question.objects.filter(
-            pub_date_lte=timezone.now()
+            pub_date__lte=timezone.now()
         ).order_by('-pub_date')[:5]
 
 
