@@ -21,6 +21,9 @@ class Question(models.Model):
         now = timezone.now()
         # 表明这问题的发布时间一定在现在之前
         return now - datetime.timedelta(days=1) <= self.pub_date <= now
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Publishen recently?'
 
 
 class Choice(models.Model):
