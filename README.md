@@ -7,4 +7,6 @@
 
 ### Django at a glance
 
-### Writing your first Django App, part 1
+### Writing your first Django App, 
+
+### Django - auth - system
