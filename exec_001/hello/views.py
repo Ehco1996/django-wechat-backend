@@ -4,8 +4,12 @@ from django.http import HttpResponse
 
 # Create your views here.
 def index(request):
-    return HttpResponse('Say hello ')
+    context ={
+        'bloodmessage':'hei good boy',
+    }
+    
+    return render(request,'hello/index.html',context=context) 
 
 
 def about(request):
-    return HttpResponse("Say about <a href='/index/'>index</a> ")
+    return render(request,'hello/about.html',context=None)
