@@ -30,4 +30,8 @@ def register(request):
     # 这里我们开始渲染模板
     # 如果用户没有提交数据，我们渲染一个空的表单
     # 如果用户验证的数据不合法，我们渲染一个含有错误信息的表单
-    return render(request,'register.html',context={'form':form})
+    return render(request,'users/register.html',context={'form':form})
+
+
+def index(request):
+    return render(request,'index.html')
