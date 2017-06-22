@@ -9,7 +9,7 @@
 <body>
     <h1> Ehco, Python coder </h1>
     
-    <a href="/rango/index"> 返回首页 </a> <br />
+    <a href="{% url 'hello:index' %}"> 返回首页 </a> <br />
     <h3>二维码</h3>
     <img src="{% static 'media/1.jpg' %}" alt="QR code" />
 </body>

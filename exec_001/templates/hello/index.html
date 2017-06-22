@@ -6,10 +6,27 @@
 </head>
 
 <body>
-    <h1> Rango says... </h1>
-    hei Ehco, <strong>{{ bloodmessage }} </strong> <br />
-    <a href="/rango/about"> About me </a> <br />
-
+    <h1> 阅读之星： </h1>
+    {% if pages %}
+        {% for page in pages %}
+            <ul>    
+                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+    
+    <h2> 所有分类如下：</h2>
+    {% if categories %}
+    <ul>
+        {% for  category in categories %}
+            <li> <a href="/rango/category/{{ category.name }}"> {{category.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <strong> there are no categories present </strong>
+    {% endif %}
+    <a href="{% url 'hello:about' %}"> About me </a> <br />
+    
 </body>
 
 </html>
