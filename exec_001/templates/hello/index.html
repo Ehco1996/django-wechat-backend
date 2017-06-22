@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title> Rango </title>
+    <title> Ehco Pages </title>
 </head>
 
 <body>
@@ -25,6 +25,8 @@
     {% else %}
         <strong> there are no categories present </strong>
     {% endif %}
+    <a href="{% url 'hello:add_category' %}"> 增加一个新的分类 </a> <br />
+    
     <a href="{% url 'hello:about' %}"> About me </a> <br />
     
 </body>
