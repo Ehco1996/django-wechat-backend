@@ -122,3 +122,5 @@ STATIC_URL = '/static/'
 
 # 其他设置
 AUTH_USER_MODEL = 'users.User'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
