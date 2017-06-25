@@ -19,12 +19,16 @@ from .ss_invite import code_back
 nav_bar = '''公众号正在开发中...
  
 回复「指南」
-即可获得精品文章   
+即可获得精品文章
+
 '''
+# 用来计算时间间隔的常量，每次消息传递后更新
+global last_time
+last_time = 1
 
 
 def main_handle(xml):
-
+    global last_time
     # 找到传来的消息事件：
     # 如果普通用户发来短信，则event字段不会被捕捉
     try:
@@ -41,7 +45,8 @@ def main_handle(xml):
         msg_content = ''
 
     # 后台打印一下日志
-    print(msg_type, msg_content, event)
+    print('**********收到的数据***********')
+    print(msg_type, event, '\n文本内容：', msg_content)
 
     # 判断是否是新关注的用户
     if event == 'subscribe':
@@ -60,7 +65,16 @@ def main_handle(xml):
             return code_back(xml)
         # 当不属于规则是，返回一个功能引导菜单
         else:
-            return parser_text(xml, text=nav_bar)
+            # 获取消息传递的时间
+            t = int(time.time()) - last_time
+            last_time = (int(time.time()))
+            print(last_time)
+            # 当用户连续发信息的时候，我们不自动回复
+            if t > 5:
+                return parser_text(xml, text=nav_bar)
+
+            else:
+                return 'success'
 
     else:
         return 'success'

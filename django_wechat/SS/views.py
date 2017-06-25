@@ -16,6 +16,7 @@ TOKEN = 'ehcotest2017'
 
 # csrf_exempt 标记是为了取消django自带的csrf标记
 
+
 @csrf_exempt
 def wechat(request):
     '''
@@ -55,6 +56,7 @@ def wechat(request):
         xml = etree.fromstring(data)
 
         # 在控制台输出一下挑调试信息
+        print('**********收到的XML***********\n')
         print(data)
 
         response_xml = main_handle(xml)
