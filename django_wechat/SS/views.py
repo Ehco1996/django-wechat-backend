@@ -5,9 +5,9 @@ from lxml import etree
 from django.utils.encoding import smart_str
 import hashlib
 import time
-from django.template.loader import render_to_string
 
-from .ss_invite import code_back
+from .handle import main_handle
+
 
 # Create your views here.
 
@@ -15,38 +15,6 @@ from .ss_invite import code_back
 TOKEN = 'ehcotest2017'
 
 # csrf_exempt 标记是为了取消django自带的csrf标记
-
-
-def mirrorback(xml):
-    '''
-    处理微信发来的数据，
-    这里仅仅返回用户发来的消息
-    str 是微信服务器post来的xml格式的数据
-
-    返回处理过的xml
-    '''
-
-    # 我们翻转发件人和收件人的消息
-    fromUser = xml.find('ToUserName').text
-    toUser = xml.find('FromUserName').text
-    content = xml.find('Content').text
-    message_id = xml.find('MsgId').text
-
-    # 我们来构造需要返回的时间戳
-    nowtime = str(int(time.time()))
-
-    context = {
-        'FromUserName': fromUser,
-        'ToUserName': toUser,
-        'Content': content,
-        'time': nowtime,
-        'id': message_id,
-    }
-    # 我们来构造需要返回的xml
-    respose_xml = render_to_string('SS/wx_text.xml', context=context)
-
-    return respose_xml
-
 
 @csrf_exempt
 def wechat(request):
@@ -89,17 +57,6 @@ def wechat(request):
         # 在控制台输出一下挑调试信息
         print(data)
 
-        # 找到此次传送的消息信息
-        msg_type = xml.find('MsgType').text
-        content = xml.find('Content').text
-        print(msg_type, content)
+        response_xml = main_handle(xml)
 
-        # 将数据处理后发出
-        if content == '邀请码':
-            respose_xml = code_back(xml)
-        else:
-            respose_xml = mirrorback(xml)
-
-        print(respose_xml)
-
-        return HttpResponse(respose_xml)
+        return HttpResponse(response_xml)
