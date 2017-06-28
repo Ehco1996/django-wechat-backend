@@ -10,3 +10,9 @@
 ### Writing your first Django App, 
 
 ### Django - auth - system
+
+### Tango or Django project
+
+### Django - wechat - backends
+
+### Django - sspanel (新开坑)
