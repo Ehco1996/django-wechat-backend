@@ -18,6 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'sspanel', include('shadowsocks.urls', namespace='shadowsocks')),
+    url(r'', include('shadowsocks.urls', namespace='shadowsocks')),
 
 ]
