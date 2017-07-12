@@ -1,10 +1,43 @@
-{% extends 'base.html' %}
-{% block main %}
-    <div id="main">
-        <h1>TEST</h1>
+{% extends 'base.html' %} {% block main %}
+
+
+<div class="columns">
+    <div class="column is-4">
+        <div class="notification is-danger">
+            <button class="delete"></button>
+            <h2 class="title is-4">
+                好像发现了一个<br/> <br/>了不得的地方！
+            </h2>
+        </div>
     </div>
+    <div class="column is-4">
+        <div class="notification is-success">
+            <button class="delete"></button>
+            <h2 class="title is-4">
+                是啊是啊！<br/><br/>要进去瞧瞧么？</h2>
+        </div>
+    </div>
+    <div class="column is-4">
+        <div class="notification is-info">
+            <button class="delete"></button>
+            <h2 class="title is-4">
+                当然要去！<br/><br/>魔王总要救公主的！</h2>
+        </div>
+    </div>
+</div>
+<hr/>
+<br/>
+
+    <div class="column box ">
+       <h1 class="title is-2"> 注册注册！</h1>
+       <h2 class="subtitle">没有账号？快去注册一个吧！</h2>
+       <a class="button is-primary is-outlined">注册</a>
+    </div>
+<br/>
+    <div class="column box ">
+       <h1 class="title is-2"> 登录登录！</h1>
+       <h2 class="subtitle">有账号了？登录吧少年！</h2>
+       <a class="button is-danger is-outlined">登录</a>
+    </div>
+
 {% endblock main %}
-
-
-
-
