@@ -1,0 +1,50 @@
+{% extends 'base.html' %} {% block main %}
+
+<div class="columns">
+    <div class="column is-12">
+        <div class="notification is-danger">
+            <button class="delete"></button>
+            <h2 class="title">节点列表:</h2>
+        </div>
+    </div>
+</div>
+
+<div class="column is-12">
+    <div class="box nodelist">
+        <ul>
+            {% for list in nodelists %}
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">{{ list.name }}</p>
+                </div>
+                <div class="card-content">
+                    <div class="content">
+                        {{ list.info }}
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a class="card-footer-item">二维码</a>
+                    <a class="card-footer-item">详细信息:</a>
+                    <a class="card-footer-item">使用人数:</a>
+                </div>
+            </div>
+            <br/>
+            {% empty %}
+            <div class="column is-12">
+                <div class="notification is-info">
+
+                    <h2 class="title">木有节点</h2>
+
+                </div>
+            </div>
+
+            {% endfor %}
+
+    </div>
+    </ul>
+</div>
+</div>
+
+
+
+{% endblock main %}

@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shadowsocks',
+    'shadowsocks', # 前端网站
+    'ssserver', # 后端server
 ]
 
 MIDDLEWARE = [
