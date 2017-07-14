@@ -23,13 +23,60 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a class="card-footer-item">二维码</a>
-                    <a class="card-footer-item">详细信息:</a>
-                    <a class="card-footer-item">使用人数:</a>
+                    <div class="card-footer-item">
+                        <div class="block">
+                            <a class="button is-primary is-outlined modal-button" data-target="modal-{{ list.name }}">二维码</a>
+
+                        </div>
+                    </div>
+                    <div class="card-footer-item">
+                        <div class="block">
+                            <a class="button is-primary is-outlined modal-button" data-target="modal-{{ list.pk }}">节点配置</a>
+                        </div>
+                    </div>
+                    <a class="card-footer-item">使用人数:「{{ list.count }}」</a>
                 </div>
             </div>
-            <br/>
-            {% empty %}
+
+            <div class="modal nodeinfo" id="modal-{{ list.pk }}">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">节点配置信息:</p>
+                        <button class="delete"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <table class="table">
+                            <tr>
+                                <td class="notification">节点ip:</td>
+                                <br/>
+                                <td class="notification is-info">{{ list.server }}</td>
+                            </tr>
+                            <tr>
+                                <td class="notification">加密方式:</td>
+                                <td class="notification is-primary">{{ list.menthod }}</td>
+                            </tr>
+                            <tr>
+                                <td class="notification">运行状态:</td>
+                                <td class="notification is-success">{{ list.status }}</td>
+                            </tr>
+                        </table>
+                    </section>
+                </div>
+            </div>
+
+            <div class="modal qrcode" id="modal-{{ list.name }}">
+                <div class="modal-background"></div>
+                <div class="modal-content">
+                    <h2>{{ list.name }}</h2>
+                    <p class="image is-4by3">
+                        <img src="http://bulma.io/images/placeholders/1280x960.png">
+                    </p>
+                </div>
+                <button class="modal-close is-large"></button>
+            </div>
+
+            <br/> {% empty %}
             <div class="column is-12">
                 <div class="notification is-info">
 

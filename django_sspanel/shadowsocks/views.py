@@ -1,5 +1,11 @@
 from django.shortcuts import render,render_to_response
 from django.http import HttpResponse
+
+# 导入shadowsocks节点相关文件
+from ssserver.models import Node
+
+
+
 # Create your views here.
 def index(request):
     '''跳转到首页'''
@@ -8,12 +14,10 @@ def index(request):
 def nodeinfo(request):
     '''跳转到节点信息的页面'''
     
-    nodelist = [{'name':'节点一','info':'这个节点是免费节点,点开下方按钮获取节点信息'},
-                {'name':'节点二','info':'这个节点是免费节点,点开下方按钮获取节点信息'},
-            ]
+    nodelists = Node.objects.all()
 
     context = {
-        'nodelists':nodelist,
+        'nodelists':nodelists,
     }
 
     return render(request,'sspanel/nodeinfo.html',context=context)
