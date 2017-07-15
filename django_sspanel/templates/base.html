@@ -3,55 +3,61 @@
 
 <head>
     {% load staticfiles %}
-    <title>秘密の屋</title>
+    <title>秘密の小屋</title>
     <!-- meta -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- css -->
     <link rel="stylesheet" href="{% static 'sspanel/css/bulma.css'%}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'sspanel/css/ehco.css'%}">
     <!-- js -->
-    <script src="{% static 'sspanel/js/jquery-2.1.3.min.js' %}"></script>   
+    <script src="{% static 'sspanel/js/jquery-2.1.3.min.js' %}"></script>
     <script src="{% static 'sspanel/js/ehco.js' %}"></script>
 </head>
 
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <a href="/">
-                <figure class="image is-128x128">
-                    <img src="{% static 'img/logo/logo.png' %}">
-                </figure>
-            </a>
-        </div>
-
-        <div class="navbar-menu">
-            <!-- navbar start, navbar end -->
-            <div class="navbar-start">
-                <!-- navbar items -->
-                <a class="navbar-item">帮助说明</a>
-                <a class="navbar-item">客户端</a>
-            </div>
-
-            <div class="navbar-end">
-                <!-- navbar items -->
-                <div class="navbar-item">
-                    <div class="field is-grouped">
-                        <h2 class="title is-4">喵喵喵？</h2>
+    <section class="hero is-small is-primary ">
+        <!-- Hero header: will stick at the top -->
+        <div class="hero-head">
+            <header class="nav">
+                <div class="container">
+                    <div class="nav-left">
+                        <a class="nav-item" href="/">
+                            <strong class="title">秘密の小屋</strong>
+                        </a>
                     </div>
-                </div>                
+                    <div class="nav-right nav-menu">
+                        <a class="nav-item is-active" href="/">首页</a>
+                        <a class="nav-item" href="/sshelp">使用说明</a>
+                        <span class="nav-item">
+                            <a class="button is-primary is-inverted" href="/ssclient">
+                            <span class="icon is-medium">
+                            <i class="fa fa-cloud-download"></i>
+                            </span>
+                            <span> 客户端</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <!-- Hero content: will be in the middle -->
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <h1 class="title">
+                    <a href="/"><strong>秘密の小屋</strong></a>
+                </h1>
+                <h2 class="subtitle">
+                    你说会发现什么呢？
+                </h2>
             </div>
         </div>
-
-
-    </nav>
-
-    <hr>
-
-
+    </section>
+    <br/>
+    
     <div class="container is-fluid">
-
         <div class="columns is-mobile">
             <div class="column is-2">
                 <aside class="menu">
@@ -88,22 +94,22 @@
     </div>
 
 
-<footer>
-    <div class="container">
-        <div class="content has-text-centered">
-            <p>
-                <p class="copyright">&copy; 2017·公众号: findyourownway·<a href="https://github.com/ehco1996">GitHub</a>·
-                    <a href="https://www.zhihu.com/people/Ehcostuff/activities">知乎</a>
+    <footer>
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    <p class="copyright">&copy; 2017·公众号: findyourownway·<a href="https://github.com/ehco1996">GitHub</a>·
+                        <a href="https://www.zhihu.com/people/Ehcostuff/activities">知乎</a>
+                    </p>
                 </p>
-            </p>
-            <p>
-                <a class="icon" href="https://github.com/jgthms/bulma">
+                <p>
+                    <a class="icon is-samll" href="https://github.com/jgthms/bulma">
           <i class="fa fa-github"></i>
         </a>
-            </p>
+                </p>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 </body>
 
 

@@ -11,6 +11,16 @@ def index(request):
     '''跳转到首页'''
     return render_to_response('sspanel/index.html')
 
+
+def sshelp(request):
+    '''跳转到帮助界面'''
+    return render_to_response('sspanel/help.html')
+    
+def ssclient(request):
+    '''跳转到客户端界面'''
+    return render_to_response('sspanel/client.html')
+    
+
 def nodeinfo(request):
     '''跳转到节点信息的页面'''
     
