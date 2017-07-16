@@ -1,8 +1,9 @@
-from django.shortcuts import render,render_to_response
+from django.shortcuts import render,render_to_response,redirect
 from django.http import HttpResponse
 
 # 导入shadowsocks节点相关文件
 from ssserver.models import Node,InviteCode
+from .forms import RegisterForm
 
 
 
@@ -37,6 +38,20 @@ def gen_invite_code(request,Num=10):
         code.save()
     return HttpResponse('邀请码添加成功')
 
+
+def register(request):
+    '''用户注册时的函数'''
+    if request.method== 'POST':
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('/')
+    else:
+        form = RegisterForm()
+    
+    return render(request,'sspanel/register.html',{'form':form})
 
 
 def nodeinfo(request):
