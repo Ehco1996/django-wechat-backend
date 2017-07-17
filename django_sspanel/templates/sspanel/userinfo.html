@@ -4,9 +4,9 @@
 
 {% if user.is_authenticated %}
     <p>你已登录，欢迎你：<a href="#">{{ user.username }}</a></p>
+    <button class="btn btn-default"><a href="{% url 'auth:logout' %}">注销登录</a></button>
 {% else %}
-    <p>你还没有登录，请登录 
-</p>
+    <p>你还没有登录，请登录 </p>
 {% endif %}
   
 {% endblock main %}

@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'ssinvite/(?P<Num>[0-9]{1,2})/$',views.gen_invite_code,name='geninvitecode'),
     url(r'passinvite/(?P<invitecode>[\S]+)/$',views.pass_invitecode,name='passinvitecode'),
     url(r'register/$',views.register,name='register'),
-    url(r'login/$',views.Login,name='login'),
-    url(r'users/userinfo/$',views.Userinfo,name='userinfo'),
+    url(r'login/$',views.Login_view,name='login'),
+    url(r'logout/$',views.Logout_view,name='logout'),
+    url(r'users/userinfo/$',views.userinfo,name='userinfo'),
     ]

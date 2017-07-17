@@ -1,8 +1,11 @@
 from django.shortcuts import render, render_to_response, redirect, HttpResponseRedirect
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 # 导入shadowsocks节点相关文件
-from .models import Node, InviteCode,User
-from .forms import RegisterForm,LoginForm
+from .models import Node, InviteCode, User
+from .forms import RegisterForm, LoginForm
 
 # Create your views here.
 
@@ -41,8 +44,9 @@ def gen_invite_code(request, Num=10):
 
 def pass_invitecode(request, invitecode):
     '''提供点击邀请码连接之后自动填写邀请码'''
-    form = RegisterForm(initial={'invitecode':invitecode})
+    form = RegisterForm(initial={'invitecode': invitecode})
     return render(request, 'sspanel/register.html', {'form': form})
+
 
 def nodeinfo(request):
     '''跳转到节点信息的页面'''
@@ -54,7 +58,6 @@ def nodeinfo(request):
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
-
 
 
 def register(request):
@@ -98,19 +101,20 @@ def register(request):
 
     return render(request, 'sspanel/register.html', {'form': form})
 
-def Login(request):
-    '''用户登录函数'''
-    if request.method=='POST':
-        form = LoginForm(request.POST)
 
+def Login_view(request):
+    '''用户登录函数'''
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
         if form.is_valid():
             # 获取表单用户名和密码
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             # 和数据库信息进行比较
-            user = User.objects.filter(username=username,password=password)
-
-            if user:
+            #user = User.objects.filter(username=username,password=password)
+            user = authenticate(username=username, password=password)
+            if user is not None and user.is_active:
+                login(request, user)
                 registerinfo = {
                     'title': '登录成功！',
                     'subtitle': '自动跳转到用户中心',
@@ -129,15 +133,31 @@ def Login(request):
                 }
                 context = {
                     'registerinfo': registerinfo,
-                    'form':form,
+                    'form': form,
 
                 }
                 return render(request, 'sspanel/login.html', context=context)
     else:
         form = LoginForm()
         return render(request, 'sspanel/login.html', {'form': form})
-    
 
-def Userinfo(request):
+
+def Logout_view(request):
+    '''用户登出函数'''
+    logout(request)
+    registerinfo = {
+        'title': '注销成功！',
+        'subtitle': '欢迎下次再来!！',
+                    'status': 'success',
+    }
+    context = {
+        'registerinfo': registerinfo,
+    }
+
+    return render(request, 'sspanel/index.html', context=context)
+
+
+@login_required
+def userinfo(request):
     '''用户中心'''
-    render_to_response(request,'sspanel/userinfo.html')
+    return render(request, 'sspanel/userinfo.html')
