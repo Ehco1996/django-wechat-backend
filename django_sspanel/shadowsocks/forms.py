@@ -13,24 +13,24 @@ class RegisterForm(UserCreationForm):
 
     email = forms.CharField(label='邮箱',
                             widget=forms.TextInput(
-                                attrs={'class': 'input is-info'})
+                                attrs={'class': 'input is-warning'})
                             )
     invitecode = forms.CharField(label='邀请码', help_text='邀请码必须填写',
                                  widget=forms.TextInput(
-                                     attrs={'class': 'input is-info'})
+                                     attrs={'class': 'input is-success'})
                                  )
     password1 = forms.CharField(label='密码', help_text='''你的密码不能与其他个人信息太相似。
                                                         你的密码必须包含至少 8 个字符。
                                                         你的密码不能是大家都爱用的常见密码
                                                         你的密码不能全部为数字。''',
                                 widget=forms.TextInput(
-                                    attrs={'class': 'input is-info'})
+                                    attrs={'class': 'input is-primary', 'type': 'password'})
                                 )
     password2 = forms.CharField(label='重复密码',
                                 widget=forms.TextInput(
-                                    attrs={'class': 'input is-info'})
+                                    attrs={'class': 'input is-danger', 'type': 'password'})
                                 )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('username', 'email',)
+        fields = ('username', 'email', 'password1', 'password2', 'invitecode',)
