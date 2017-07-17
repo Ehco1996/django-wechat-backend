@@ -30,7 +30,11 @@
                 {% for code in codelist %}
                 <tr>
                     <td>{{ code.time_created|date:"m月d日" }}：</td>
-                    <td>{{ code.code }}</td>
+                    <td>
+                        <a href="{% url 'shadowsocks:passinvitecode' code.code %}" code.code }}>
+                            {{ code.code }}
+                        </a>
+                    </td>
                 </tr>
                 {% empty %}
                 <h2 class="subtitle">

@@ -39,6 +39,12 @@ def gen_invite_code(request, Num=10):
     return HttpResponse('邀请码添加成功')
 
 
+def pass_invitecode(request, invitecode):
+    '''提供点击邀请码连接之后自动填写邀请码'''
+    form = RegisterForm(initial={'invitecode':invitecode})
+    return render(request, 'sspanel/register.html', {'form': form})
+
+
 def register(request):
     '''用户注册时的函数'''
     if request.method == 'POST':
