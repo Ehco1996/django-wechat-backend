@@ -1,7 +1,7 @@
 from django.shortcuts import render, render_to_response, redirect, HttpResponseRedirect
 from django.http import HttpResponse
 # 导入shadowsocks节点相关文件
-from ssserver.models import Node, InviteCode
+from .models import Node, InviteCode
 from .forms import RegisterForm
 
 # Create your views here.
