@@ -1,13 +1,54 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block main %} {% if user.is_authenticated %}
+<div class="column is-12">
+    <section class="hero is-info is-smaill">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    用户中心：
+                </h1>
+                <h2 class="subtitle">
+                    这里有你的出生证明....
+                </h2>
+            </div>
+        </div>
+    </section>
+</div>
 
-{% block main %}
+<div class="column is-12">
 
-{% if user.is_authenticated %}
-    <p>你已登录，欢迎你：<a href="#">{{ user.username }}</a></p>
-    <button class="btn btn-default"><a href="{% url 'auth:logout' %}">注销登录</a></button>
+    <div class="tile is-ancestor">
+
+        <div class="tile is-4 is-vertical is-parent">
+            <div class="tile box is-child">
+                <p class="title">欢迎小主: {{ user.username }}</p>
+                <p class="subtitle">这里的功能还比较少： </p>
+                <button class="button"><a href="{% url 'shadowsocks:logout' %}">注销登录</a></button>
+                <button class="button"><a href="{% url 'password_change' %}">修改密码</a></button>
+            </div>
+
+            <div class="tile box is-child">
+                <article class="article notification is-info">
+                    <p class="title">用户信息:</p>
+                    <p class="subtitle">这里的功能还比较少： </p>
+                </article>
+            </div>
+        </div>
+
+        <div class="tile is-8 is-vertical is-parent">
+            <div class="tile box is-child">
+                <h3 class="title">留言板：</h3>
+                <textarea class="textarea" placeholder="这个留言板随便你想说说啥都行，反正我也看不见" rows="10"></textarea>
+                <hr/>
+                <a type="submit" class="button is-info is-outlined" >提交</a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
 {% else %}
-    <p>你还没有登录，请登录 </p>
-{% endif %}
-  
-{% endblock main %}
-
+<p>你还没有登录，请登录 </p>
+{% endif %} {% endblock main %}
