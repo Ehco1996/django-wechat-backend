@@ -126,6 +126,5 @@ MEDIA_URL = '/media/'
 
 # 其他设置
 AUTH_USER_MODEL = 'shadowsocks.User'
-# 登入登出重定向
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

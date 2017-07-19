@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.hashers import make_password ,check_password
 
 # 自己写的小脚本 用于生成邀请码
 from .tools import get_long_random_string, get_short_random_string
@@ -46,11 +47,13 @@ class User(AbstractUser):
         return self.username
 
     def set_password(self, raw_password):
-        '''将password改变成明文，便于后台管理'''
+        '''使用md5加密算法'''
+        raw_password= make_password(raw_password,'MD5PasswordHasher')
         self.password = raw_password
 
     def check_password(self, raw_password):
-        return self.password == raw_password
+
+        return check_password(raw_password,make_password(raw_password,'MD5PasswordHasher'))
 
     class Meta(AbstractUser.Meta):
         verbose_name = '用户'
