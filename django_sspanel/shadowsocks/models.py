@@ -5,13 +5,6 @@ from django.contrib.auth.hashers import make_password ,check_password
 # 自己写的小脚本 用于生成邀请码
 from .tools import get_long_random_string, get_short_random_string
 
-
-
-
-
-PLAN_CHOICES = (
-    ('free', 'Free'),
-)
 METHOD_CHOICES = (
     ('aes-256-cfb', 'aes-256-cfb'),
     ('rc4-md5', 'rc4-md5'),
@@ -57,11 +50,6 @@ class User(AbstractUser):
 
     class Meta(AbstractUser.Meta):
         verbose_name = '用户'
-
-
-
-
-
 
 
 

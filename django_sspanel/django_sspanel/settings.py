@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shadowsocks', # 前端网站
+    'ssserver', #
 ]
 
 MIDDLEWARE = [
@@ -124,7 +125,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-# 其他设置
+# 其他设置：
 AUTH_USER_MODEL = 'shadowsocks.User'
 
+# 邮件服务设置：
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# SS面板设置：
+GB = 1024*1024*1024
+DEFAULT_TRAFFIC = 5*GB
+START_PORT = 10000
