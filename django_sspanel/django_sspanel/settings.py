@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shadowsocks', # 前端网站
-    'ssserver', #
+    'shadowsocks',  # 前端网站
+    'ssserver',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'django_sspanel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,13 +75,30 @@ WSGI_APPLICATION = 'django_sspanel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+
+# mysql 设置
+DATABASES = {
+
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'sspanel',
+        'USER': 'root',
+        'PASSWORD': '19960202',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        
+    }
+}
+
+
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -132,6 +149,6 @@ AUTH_USER_MODEL = 'shadowsocks.User'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # SS面板设置：
-GB = 1024*1024*1024
-DEFAULT_TRAFFIC = 5*GB
+GB = 1024 * 1024 * 1024
+DEFAULT_TRAFFIC = 5 * GB
 START_PORT = 10000
