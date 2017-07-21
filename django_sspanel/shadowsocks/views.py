@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.six import BytesIO
+from django.utils import timezone
+
 
 # 导入shadowsocks节点相关文件
 from .models import Node, InviteCode, User
@@ -15,6 +17,8 @@ from ssserver.models import SSUser
 # 导入第三方模块
 import qrcode
 import base64
+import datetime
+from random import randint
 # Create your views here.
 
 
@@ -102,7 +106,13 @@ def register(request):
                     'registerinfo': registerinfo
                 }
                 form.save()
+                # 删除使用过的邀请码
                 code_query.delete()
+                # 将user和ssuser关联
+                user = User.objects.get(username=request.POST.get('username'))
+                max_port_user = SSUser.objects.order_by('-port').first()
+                port = max_port_user.port+randint(2,3)
+                ss_user = SSUser.objects.create(user=user,port=port)
                 return render(request, 'sspanel/index.html', context=context)
 
     else:
@@ -169,9 +179,38 @@ def Logout_view(request):
 @login_required
 def userinfo(request):
     '''用户中心'''
-    return render(request, 'sspanel/userinfo.html')
 
+    ss_user = request.user.ss_user
+    context = {
+            'ss_user':ss_user,
+    }
 
+    return render(request, 'sspanel/userinfo.html',context=context)
+
+@login_required
+def checkin(request):
+    '''用户签到'''
+    ss_user = request.user.ss_user
+    if timezone.now() - datetime.timedelta(days=1) > ss_user.last_check_in_time:
+        # 距离上次签到时间大于一天 增加200m流量
+        ss_user.transfer_enable += int(200*1024*1024)    
+        ss_user.last_check_in_time = timezone.now()
+        ss_user.save()
+        registerinfo = {
+        'title': '签到成功！',
+        'subtitle': '获得200m流量',
+                    'status': 'success',}
+    else:
+        registerinfo = {
+        'title': '签到失败！',
+        'subtitle': '距离上次签到不足一天',
+                    'status': 'error',}
+    
+    context = {
+        'registerinfo': registerinfo,
+        'ss_user':ss_user,
+    }
+    return render(request,'sspanel/userinfo.html',context=context)
 
 @login_required
 def get_ss_qrcode(request,node_id):
@@ -192,3 +231,10 @@ def get_ss_qrcode(request,node_id):
     response = HttpResponse(image_stream, content_type="image/png")
     
     return response
+
+
+
+
+from random import choice
+# Create your views here.
+

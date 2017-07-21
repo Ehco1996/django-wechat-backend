@@ -127,7 +127,7 @@ class SSUser(models.Model):
 
     def get_check_in(self):
         '''返回当天是否签到'''
-        return timezone.now() - datetime.timedelta(days=1) > self.last_check_in_time
+        return timezone.now() - datetime.timedelta(days=1) < self.last_check_in_time
 
     @classmethod
     def get_absolute_url(cls):
@@ -142,7 +142,7 @@ class SSUser(models.Model):
         else:
             max_port_user = SSUser.objects.order_by('-port').first()
             if max_port_user:
-                self.port = max_port_user + choice([2, 3])
+                self.port = max_port_user.port + choice([2, 3])
             else:
                 self.port = settings.START_PORT
 
