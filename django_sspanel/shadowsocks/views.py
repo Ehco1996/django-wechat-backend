@@ -1,12 +1,20 @@
+# 导入django内置模块
 from django.shortcuts import render, render_to_response, redirect, HttpResponseRedirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.utils.six import BytesIO
 
 # 导入shadowsocks节点相关文件
 from .models import Node, InviteCode, User
 from .forms import RegisterForm, LoginForm
 
+# 导入ssservermodel
+from ssserver.models import SSUser
+
+# 导入第三方模块
+import qrcode
+import base64
 # Create your views here.
 
 
@@ -52,9 +60,10 @@ def nodeinfo(request):
     '''跳转到节点信息的页面'''
 
     nodelists = Node.objects.all()
-
+    ss_user = request.user.ss_user
     context = {
         'nodelists': nodelists,
+        'ss_user':ss_user,
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
@@ -161,3 +170,25 @@ def Logout_view(request):
 def userinfo(request):
     '''用户中心'''
     return render(request, 'sspanel/userinfo.html')
+
+
+
+@login_required
+def get_ss_qrcode(request,node_id):
+    '''返回节点配置信息的二维码'''
+    # 获取用户对象
+    ss_user = request.user.ss_user
+    # 获取节点对象
+    node = Node.objects.get(node_id=node_id)
+    
+    code = '{}:{}@{}:{}'.format(node.method,ss_user.password,node.server,ss_user.port)
+    # 将信息编码
+    qrpass = base64.b64encode(bytes(code,'utf8')).decode('ascii')
+    img = qrcode.make('ss://{}'.format(qrpass))
+    buf = BytesIO()
+    img.save(buf)
+    image_stream = buf.getvalue()
+    # 构造图片reponse
+    response = HttpResponse(image_stream, content_type="image/png")
+    
+    return response

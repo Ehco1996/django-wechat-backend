@@ -59,8 +59,18 @@
                                 <td class="notification is-info">{{ list.server }}</td>
                             </tr>
                             <tr>
+                                <td class="notification">端口:</td>
+                                <br/>
+                                <td class="notification is-danger">{{ ss_user.port }}</td>
+                            </tr>
+                            <tr>
+                                <td class="notification">密码:</td>
+                                <br/>
+                                <td class="notification is-danger">{{ ss_user.password }}</td>
+                            </tr>
+                            <tr>
                                 <td class="notification">加密方式:</td>
-                                <td class="notification is-primary">{{ list.menthod }}</td>
+                                <td class="notification is-primary">{{ list.method }}</td>
                             </tr>
                             <tr>
                                 <td class="notification">运行状态:</td>
@@ -73,10 +83,10 @@
 
             <div class="modal qrcode" id="modal-{{ list.name }}">
                 <div class="modal-background"></div>
+                <h2 class="title">{{ list.name }}</h2>
                 <div class="modal-content">
-                    <h2>{{ list.name }}</h2>
-                    <p class="image is-4by3">
-                        <img src="http://bulma.io/images/placeholders/1280x960.png">
+                    <p class="image is-4by4">
+                        <img src="{% url 'shadowsocks:qrcode' list.node_id %}">
                     </p>
                 </div>
                 <button class="modal-close is-large"></button>

@@ -60,7 +60,7 @@ class Node(models.Model):
 
     server = models.CharField('服务器IP', max_length=128,)
 
-    menthod = models.CharField(
+    method = models.CharField(
         '加密类型', default='aes-256-cfb', max_length=32, choices=METHOD_CHOICES,)
 
     info = models.CharField('节点说明', max_length=1024, blank=True, null=True,)
