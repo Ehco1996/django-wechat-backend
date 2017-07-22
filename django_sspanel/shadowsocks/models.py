@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password ,check_password
+from django.contrib.auth.hashers import make_password, check_password
 
 # 自己写的小脚本 用于生成邀请码
 from .tools import get_long_random_string, get_short_random_string
@@ -15,6 +15,22 @@ STATUS_CHOICES = (
     ('ok', '好用'),
     ('slow', '不好用'),
     ('fail', '坏了'),
+)
+
+PROTOCOL_CHOICES = (
+    ('auth_sha1_v4', 'auth_sha1_v4'),
+    ('auth_aes128_md5', 'auth_aes128_md5'),
+    ('auth_aes128_sha1', 'auth_aes128_sha1'),
+    ('auth_chain_a', 'auth_chain_a'),
+    ('origin', 'origin'),
+)
+
+
+OBFS_CHOICES = (
+    ('plain', 'plain'),
+    ('http_simple', 'http_simple'),
+    ('http_post', 'http_post'),
+    ('tls1.2_ticket_auth', 'tls1.2_ticket_auth'),
 )
 
 # Create your models here.
@@ -41,16 +57,15 @@ class User(AbstractUser):
 
     def set_password(self, raw_password):
         '''使用md5加密算法'''
-        raw_password= make_password(raw_password,'MD5PasswordHasher')
+        raw_password = make_password(raw_password, 'MD5PasswordHasher')
         self.password = raw_password
 
     def check_password(self, raw_password):
 
-        return check_password(raw_password,make_password(raw_password,'MD5PasswordHasher'))
+        return check_password(raw_password, make_password(raw_password, 'MD5PasswordHasher'))
 
     class Meta(AbstractUser.Meta):
         verbose_name = '用户'
-
 
 
 class Node(models.Model):
@@ -63,6 +78,12 @@ class Node(models.Model):
     method = models.CharField(
         '加密类型', default='aes-256-cfb', max_length=32, choices=METHOD_CHOICES,)
 
+    protocol = models.CharField(
+        '协议', default='origin', max_length=32, choices=PROTOCOL_CHOICES,)
+    
+    obfs = models.CharField(
+        '混淆', default='plain', max_length=32, choices=OBFS_CHOICES,)
+    
     info = models.CharField('节点说明', max_length=1024, blank=True, null=True,)
 
     status = models.CharField(
@@ -98,24 +119,24 @@ class InviteCode(models.Model):
     def clean(self):
         # 保证邀请码不会重复
         code_length = len(self.code or '')
-        if 0 < code_length <16:
+        if 0 < code_length < 16:
             self.code = '{}{}'.format(
-                    self.code,
-                    get_long_random_string()
+                self.code,
+                get_long_random_string()
             )
         else:
             self.code = None
-    
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        
+
         # 重写save方法，在包存前执行我们写的clean方法
         self.clean()
         return super(InviteCode, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.code
-    
+
     class Meta:
         verbose_name_plural = '邀请码'
         ordering = ('-time_created',)
