@@ -123,7 +123,7 @@ class SSUser(models.Model):
 
     def get_used_percentage(self):
         '''返回用户的为使用流量百分比'''
-        return (self.download_traffic + self.upload_traffic) / self.transfer_enable * 100
+        return '{:.2f}'.format((self.download_traffic + self.upload_traffic) / self.transfer_enable * 100)
 
     def get_check_in(self):
         '''返回当天是否签到'''

@@ -67,7 +67,7 @@ def nodeinfo(request):
     ss_user = request.user.ss_user
     context = {
         'nodelists': nodelists,
-        'ss_user':ss_user,
+        'ss_user': ss_user,
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
@@ -111,8 +111,8 @@ def register(request):
                 # 将user和ssuser关联
                 user = User.objects.get(username=request.POST.get('username'))
                 max_port_user = SSUser.objects.order_by('-port').first()
-                port = max_port_user.port+randint(2,3)
-                ss_user = SSUser.objects.create(user=user,port=port)
+                port = max_port_user.port + randint(2, 3)
+                ss_user = SSUser.objects.create(user=user, port=port)
                 return render(request, 'sspanel/index.html', context=context)
 
     else:
@@ -130,7 +130,7 @@ def Login_view(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             # 和数据库信息进行比较
-            #user = User.objects.filter(username=username,password=password)
+            # user = User.objects.filter(username=username,password=password)
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
                 login(request, user)
@@ -182,10 +182,11 @@ def userinfo(request):
 
     ss_user = request.user.ss_user
     context = {
-            'ss_user':ss_user,
+        'ss_user': ss_user,
     }
 
-    return render(request, 'sspanel/userinfo.html',context=context)
+    return render(request, 'sspanel/userinfo.html', context=context)
+
 
 @login_required
 def checkin(request):
@@ -193,48 +194,55 @@ def checkin(request):
     ss_user = request.user.ss_user
     if timezone.now() - datetime.timedelta(days=1) > ss_user.last_check_in_time:
         # 距离上次签到时间大于一天 增加200m流量
-        ss_user.transfer_enable += int(200*1024*1024)    
+        ss_user.transfer_enable += int(200 * 1024 * 1024)
         ss_user.last_check_in_time = timezone.now()
         ss_user.save()
         registerinfo = {
-        'title': '签到成功！',
-        'subtitle': '获得200m流量',
-                    'status': 'success',}
+            'title': '签到成功！',
+            'subtitle': '获得200m流量',
+            'status': 'success', }
     else:
         registerinfo = {
-        'title': '签到失败！',
-        'subtitle': '距离上次签到不足一天',
-                    'status': 'error',}
-    
+            'title': '签到失败！',
+            'subtitle': '距离上次签到不足一天',
+            'status': 'error', }
+
     context = {
         'registerinfo': registerinfo,
-        'ss_user':ss_user,
+        'ss_user': ss_user,
     }
-    return render(request,'sspanel/userinfo.html',context=context)
+    return render(request, 'sspanel/userinfo.html', context=context)
+
 
 @login_required
-def get_ss_qrcode(request,node_id):
+def get_ss_qrcode(request, node_id):
     '''返回节点配置信息的二维码'''
     # 获取用户对象
     ss_user = request.user.ss_user
     # 获取节点对象
     node = Node.objects.get(node_id=node_id)
-    
-    code = '{}:{}@{}:{}'.format(node.method,ss_user.password,node.server,ss_user.port)
+
+    ss_code = '{}:{}@{}:{}'.format(
+        node.method, ss_user.password, node.server, ss_user.port)
+    ssr_code = '{}:{}:{}:{}:{}:'.format(
+        node.server, ss_user.port, node.protocol, node.method, node.obfs)
     # 将信息编码
-    qrpass = base64.b64encode(bytes(code,'utf8')).decode('ascii')
-    img = qrcode.make('ss://{}'.format(qrpass))
+    ss_pass = base64.b64encode(bytes(ss_code, 'utf8')).decode('ascii')
+    ssr_pass = base64.b64encode(bytes(ssr_code, 'utf8')).decode('ascii')
+    # 符合ssr qrcode schema
+    ssr_pasw = base64.b64encode(
+        bytes(ss_user.password, 'utf8')).decode('ascii')
+    # 生成ss二维码
+    ss_img = qrcode.make('ss://{}'.format(ss_pass))
+    ssr_img = qrcode.make('ssr://{}{}'.format(ssr_pass,ssr_pasw))
     buf = BytesIO()
-    img.save(buf)
+    ssr_img.save(buf)
     image_stream = buf.getvalue()
     # 构造图片reponse
     response = HttpResponse(image_stream, content_type="image/png")
-    
+
     return response
-
-
 
 
 from random import choice
 # Create your views here.
-
