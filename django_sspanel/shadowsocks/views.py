@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 # 导入shadowsocks节点相关文件
-from .models import Node, InviteCode, User
+from .models import Node, InviteCode, User,Aliveip
 from .forms import RegisterForm, LoginForm
 
 # 导入ssservermodel
@@ -63,14 +63,26 @@ def pass_invitecode(request, invitecode):
 def nodeinfo(request):
     '''跳转到节点信息的页面'''
 
-    nodelists = Node.objects.all()
+    nodelists = []
+    # 将节点信息查询结果保存dict中，方便增加在线人数字段
+    nodes = Node.objects.values()
     ss_user = request.user.ss_user
+    
+
+    Alive = Aliveip.objects.all()
+    # 循环遍历没一条线路的在线人数
+    for node in nodes:
+        node['count'] = len(Alive.filter(node_id=node['node_id']))
+        nodelists.append(node)
+        
     context = {
         'nodelists': nodelists,
         'ss_user': ss_user,
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
+
+
 
 
 def register(request):

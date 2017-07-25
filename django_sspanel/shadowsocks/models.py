@@ -34,6 +34,8 @@ OBFS_CHOICES = (
 )
 
 # Create your models here.
+
+
 class User(AbstractUser):
     '''SS账户模型'''
 
@@ -80,10 +82,10 @@ class Node(models.Model):
 
     protocol = models.CharField(
         '协议', default='origin', max_length=32, choices=PROTOCOL_CHOICES,)
-    
+
     obfs = models.CharField(
         '混淆', default='plain', max_length=32, choices=OBFS_CHOICES,)
-    
+
     info = models.CharField('节点说明', max_length=1024, blank=True, null=True,)
 
     status = models.CharField(
@@ -140,3 +142,34 @@ class InviteCode(models.Model):
     class Meta:
         verbose_name_plural = '邀请码'
         ordering = ('-time_created',)
+
+
+class Aliveip(models.Model):
+    '''节点在线ip'''
+
+    node_id = models.ForeignKey(
+        Node,
+        related_name='alive_node_id',
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
+
+    user_name = models.CharField(
+        '用户名',
+        max_length=50,
+        blank=True, null=True)
+
+    ip_address = models.GenericIPAddressField('在线ip')
+
+    time = models.DateTimeField(
+        '时间',
+        editable=False,
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return self.ip_address
+
+    class Meta:
+        verbose_name_plural = '在线ip'
+        ordering = ('-time',)
