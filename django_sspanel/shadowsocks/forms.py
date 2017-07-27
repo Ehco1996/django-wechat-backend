@@ -46,7 +46,7 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(  
             attrs={  
                 'class': 'input is-primary',
-                'placeholder':u"用户名",  
+                'placeholder':"用户名",  
             }  
         ),  
     )      
@@ -57,7 +57,7 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(  
             attrs={ 
                 'class': 'input is-primary', 
-                'placeholder':u"密码", 
+                'placeholder':"密码", 
                 'type': 'password', 
             }  
         ),  

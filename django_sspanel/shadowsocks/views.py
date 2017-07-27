@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 # 导入shadowsocks节点相关文件
-from .models import Node, InviteCode, User,Aliveip
+from .models import Node, InviteCode, User, Aliveip
 from .forms import RegisterForm, LoginForm
 
 # 导入ssservermodel
@@ -67,22 +67,19 @@ def nodeinfo(request):
     # 将节点信息查询结果保存dict中，方便增加在线人数字段
     nodes = Node.objects.values()
     ss_user = request.user.ss_user
-    
 
     Alive = Aliveip.objects.all()
     # 循环遍历没一条线路的在线人数
     for node in nodes:
         node['count'] = len(Alive.filter(node_id=node['node_id']))
         nodelists.append(node)
-        
+
     context = {
         'nodelists': nodelists,
         'ss_user': ss_user,
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
-
-
 
 
 def register(request):
@@ -246,7 +243,7 @@ def get_ss_qrcode(request, node_id):
         bytes(ss_user.password, 'utf8')).decode('ascii')
     # 生成ss二维码
     ss_img = qrcode.make('ss://{}'.format(ss_pass))
-    ssr_img = qrcode.make('ssr://{}{}'.format(ssr_pass,ssr_pasw))
+    ssr_img = qrcode.make('ssr://{}{}'.format(ssr_pass, ssr_pasw))
     buf = BytesIO()
     ssr_img.save(buf)
     image_stream = buf.getvalue()
@@ -256,5 +253,11 @@ def get_ss_qrcode(request, node_id):
     return response
 
 
-from random import choice
-# Create your views here.
+@login_required
+def userinfo_edit(request):
+    '''跳转到资料编辑界面'''
+    ss_user = request.user.ss_user
+    context = {
+        'ss_user': ss_user,
+    }
+    return render(request, 'sspanel/userinfoedit.html', context=context)
