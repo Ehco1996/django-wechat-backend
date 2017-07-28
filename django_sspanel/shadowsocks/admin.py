@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User,Node,InviteCode,Aliveip
+from . import models
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -11,7 +11,10 @@ class InviteCodeAdmin(admin.ModelAdmin):
 class AliveipAdmin(admin.ModelAdmin):
     list_display=['user_name','ip_address','time']
 # Register your models here.
-admin.site.register(User,UserAdmin)
-admin.site.register(InviteCode,InviteCodeAdmin)
-admin.site.register(Node)
-admin.site.register(Aliveip,AliveipAdmin)
+admin.site.register(models.User,UserAdmin)
+admin.site.register(models.InviteCode,InviteCodeAdmin)
+admin.site.register(models.Aliveip,AliveipAdmin)
+admin.site.register(models.Node)
+admin.site.register(models.Donate)
+admin.site.register(models.MoneyCode)
+admin.site.register(models.Shop)

@@ -173,3 +173,126 @@ class Aliveip(models.Model):
     class Meta:
         verbose_name_plural = '在线ip'
         ordering = ('-time',)
+
+
+class Donate(models.Model):
+    '''捐赠记录'''
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+    )
+
+    time = models.DateTimeField(
+        '捐赠时间',
+        editable=False,
+        auto_now_add=True
+    )
+
+    money = models.DecimalField(
+        '捐赠金额',
+        decimal_places=2,
+        max_digits=10,
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return str(self.money)
+
+    class Meta:
+        verbose_name_plural = '捐赠'
+
+
+class MoneyCode(models.Model):
+    '''充值码'''
+    user = models.CharField(
+        '用户名',
+        max_length=128,
+        blank=True, 
+        null=True,
+    )
+
+
+    time = models.DateTimeField(
+        '捐赠时间',
+        editable=False,
+        auto_now_add=True
+    )
+
+    code = models.CharField(
+        '充值码',
+        primary_key=True,
+        blank=True,
+        max_length=40,
+        default=get_long_random_string
+    )
+
+    number = models.DecimalField(
+        '捐赠金额',
+        decimal_places=2,
+        max_digits=10,
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    isused = models.BooleanField(
+        '是否使用',
+        default=False,
+    )
+
+    def clean(self):
+        # 保证邀请码不会重复
+        code_length = len(self.code or '')
+        if 0 < code_length < 16:
+            self.code = '{}{}'.format(
+                self.code,
+                get_long_random_string()
+            )
+        else:
+            self.code = None
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+
+        # 重写save方法，在包存前执行我们写的clean方法
+        self.clean()
+        return super(MoneyCode, self).save(force_insert, force_update, using, update_fields)
+
+    def __str__(self):
+        return self.code
+
+    class Meta:
+        verbose_name_plural = '充值码'
+        ordering = ('-time',)
+
+
+class Shop(models.Model):
+    '''商品'''
+
+    name = models.CharField(
+        '商品描述',
+        max_length=128,
+
+    )
+
+    transfer = models.BigIntegerField(
+        '增加的流量',
+        default=1024 * 1024 * 1024
+    )
+
+    moeny = models.DecimalField(
+        '捐赠金额',
+        decimal_places=2,
+        max_digits=10,
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = '商品'

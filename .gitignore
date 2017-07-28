@@ -103,3 +103,5 @@ ENV/
 # 自定义文件
 ss_invite.py
 
+django_sspanel/shadowsocks/static/.DS_Store
+.DS_Store

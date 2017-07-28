@@ -8,7 +8,7 @@ from django.utils import timezone
 
 
 # 导入shadowsocks节点相关文件
-from .models import Node, InviteCode, User, Aliveip
+from .models import Node, InviteCode, User, Aliveip, Donate
 from .forms import RegisterForm, LoginForm
 
 # 导入ssservermodel
@@ -261,3 +261,12 @@ def userinfo_edit(request):
         'ss_user': ss_user,
     }
     return render(request, 'sspanel/userinfoedit.html', context=context)
+
+
+def donate(request):
+    '''跳转到捐赠界面'''
+    donatelist = Donate.objects.all()
+
+    context = {'donatelist': donatelist, }
+
+    return render(request, 'sspanel/donate.html', context=context)

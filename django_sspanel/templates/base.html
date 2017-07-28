@@ -93,7 +93,7 @@
                         <ul class="menu-list">
                             <li><a href="{% url 'shadowsocks:userinfo' %}">账户信息</a></li>
                             <li><a href="{% url 'shadowsocks:userinfo_edit' %}">资料编辑</a></li>
-                            <li><a>捐赠！</a></li>
+                            <li><a href="{% url 'shadowsocks:donate' %}">捐赠！</a></li>
                         </ul>
                         <p class="menu-label">
                             使用菜单
@@ -113,8 +113,7 @@
                             管理面板
                         </p>
                         <ul class="menu-list">
-                            <li><a>管理员请双击</a></li>
-                            <li><a>6666</a></li>
+                            <li><a href="/admin">默认后台管理</a></li>
                         </ul>
                     </aside>
                     {% else %}
