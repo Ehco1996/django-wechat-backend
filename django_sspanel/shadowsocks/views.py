@@ -318,3 +318,66 @@ def purchase(request, goods_id):
             'registerinfo': registerinfo,
         }
         return render(request, 'sspanel/userinfo.html', context=context)
+
+
+def chargecenter(request):
+    '''充值界面的跳转'''
+    user = request.user
+    codelist = MoneyCode.objects.filter(user=user)
+
+    context = {'ss_user': user,
+               'codelist': codelist}
+
+    return render(request, 'sspanel/chargecenter.html', context=context)
+
+
+def charge(request):
+    user = request.user
+    if request.method == 'POST':
+        input_code = request.POST.get('chargecode')
+        # 在数据库里检索充值
+        code_query = MoneyCode.objects.filter(code=input_code)
+        # 判断充值码是否存在
+        if len(code_query) == 0:
+            registerinfo = {
+                'title': '充值码失效',
+                'subtitle': '请重新获取充值码',
+                'status': 'error',
+            }
+            context = {
+                'registerinfo': registerinfo,
+                'ss_user': user,
+            }
+            return render(request, 'sspanel/chargecenter.html', context=context)
+
+        else:
+            code = code_query[0]
+            # 判断充值码是否被使用
+            if code.isused == True:
+                # 当被使用的是时候
+                registerinfo = {
+                    'title': '充值码失效',
+                    'subtitle': '请重新获取充值码',
+                    'status': 'error', }
+                context = {
+                    'registerinfo': registerinfo,
+                    'ss_user': user, }
+                return render(request, 'sspanel/chargecenter.html', context=context)
+            else:
+                # 充值操作
+                user.balance += code.number
+                code.user = user.username
+                code.isused = True
+                user.save()
+                code.save()
+
+                registerinfo = {
+                    'title': '充值成功！',
+                    'subtitle': '请去商店购买商品！',
+                    'status': 'success',
+                }
+                context = {
+                    'registerinfo': registerinfo,
+                    'ss_user': user,
+                }
+                return render(request, 'sspanel/chargecenter.html', context=context)

@@ -10,11 +10,14 @@ class InviteCodeAdmin(admin.ModelAdmin):
 
 class AliveipAdmin(admin.ModelAdmin):
     list_display=['user_name','ip_address','time']
+
+class MoneyCodeAdmin(admin.ModelAdmin):
+    list_display=['user','code','isused']
 # Register your models here.
 admin.site.register(models.User,UserAdmin)
 admin.site.register(models.InviteCode,InviteCodeAdmin)
 admin.site.register(models.Aliveip,AliveipAdmin)
 admin.site.register(models.Node)
 admin.site.register(models.Donate)
-admin.site.register(models.MoneyCode)
+admin.site.register(models.MoneyCode,MoneyCodeAdmin)
 admin.site.register(models.Shop)

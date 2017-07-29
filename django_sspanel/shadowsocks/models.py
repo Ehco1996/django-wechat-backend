@@ -231,7 +231,7 @@ class MoneyCode(models.Model):
         '捐赠金额',
         decimal_places=2,
         max_digits=10,
-        default=0,
+        default=10,
         null=True,
         blank=True,
     )
@@ -244,7 +244,7 @@ class MoneyCode(models.Model):
     def clean(self):
         # 保证邀请码不会重复
         code_length = len(self.code or '')
-        if 0 < code_length < 16:
+        if 0 < code_length < 12:
             self.code = '{}{}'.format(
                 self.code,
                 get_long_random_string()
@@ -252,19 +252,14 @@ class MoneyCode(models.Model):
         else:
             self.code = None
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
 
-        # 重写save方法，在包存前执行我们写的clean方法
-        self.clean()
-        return super(MoneyCode, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.code
 
     class Meta:
         verbose_name_plural = '充值码'
-        ordering = ('-time',)
+        ordering = ('isused',)
 
 
 class Shop(models.Model):
