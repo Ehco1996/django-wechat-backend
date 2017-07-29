@@ -209,10 +209,9 @@ class MoneyCode(models.Model):
     user = models.CharField(
         '用户名',
         max_length=128,
-        blank=True, 
+        blank=True,
         null=True,
     )
-
 
     time = models.DateTimeField(
         '捐赠时间',
@@ -282,8 +281,8 @@ class Shop(models.Model):
         default=1024 * 1024 * 1024
     )
 
-    moeny = models.DecimalField(
-        '捐赠金额',
+    money = models.DecimalField(
+        '金额',
         decimal_places=2,
         max_digits=10,
         default=0,
@@ -293,6 +292,10 @@ class Shop(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_transfer_by_GB(self):
+        '''增加的流量以GB的形式返回'''
+        return '{}'.format(self.transfer / 1024 / 1024 / 1024)
 
     class Meta:
         verbose_name_plural = '商品'

@@ -20,5 +20,9 @@ urlpatterns = [
     url(r'^checkin/$',views.checkin,name='checkin'),
     url(r'qrcode/(?P<node_id>[0-9]+)$',views.get_ss_qrcode,name='qrcode'),
     url(r'^donate/$',views.donate,name='donate'),
+    url(r'^shop/$',views.shop,name='shop'),
+    url(r'purchase/(?P<goods_id>[0-9]+)$',views.purchase,name='purchase'),
+    
+    
     
     ]

@@ -5,10 +5,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils.six import BytesIO
 from django.utils import timezone
-
+from django.core.urlresolvers import reverse
 
 # 导入shadowsocks节点相关文件
-from .models import Node, InviteCode, User, Aliveip, Donate
+from .models import Node, InviteCode, User, Aliveip, Donate, Shop, MoneyCode
 from .forms import RegisterForm, LoginForm
 
 # 导入ssservermodel
@@ -270,3 +270,51 @@ def donate(request):
     context = {'donatelist': donatelist, }
 
     return render(request, 'sspanel/donate.html', context=context)
+
+
+def shop(request):
+    '''跳转到商品界面'''
+    ss_user = request.user
+
+    goods = Shop.objects.all()
+
+    context = {'ss_user': ss_user,
+               'goods': goods, }
+
+    return render(request, 'sspanel/shop.html', context=context)
+
+
+def purchase(request, goods_id):
+    '''商品购买逻辑'''
+
+    goods = Shop.objects.all()
+    good = goods.get(pk=goods_id)
+    user = request.user
+    ss_user = request.user.ss_user
+
+    if user.balance < good.money:
+        registerinfo = {
+            'title': '金额不足！',
+            'subtitle': '请联系站长充值',
+            'status': 'error', }
+        context = {'ss_user': ss_user,
+                   'goods': goods,
+                   'registerinfo': registerinfo,
+                   }
+        return render(request, 'sspanel/shop.html', context=context)
+
+    else:
+        ss_user.transfer_enable += good.transfer
+        user.balance -= good.money
+        ss_user.save()
+        user.save()
+        registerinfo = {
+            'title': '充值成功',
+            'subtitle': '即将跳转回用户中心',
+            'status': 'success', }
+
+        context = {
+            'ss_user': ss_user,
+            'registerinfo': registerinfo,
+        }
+        return render(request, 'sspanel/userinfo.html', context=context)
