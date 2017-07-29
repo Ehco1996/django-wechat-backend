@@ -202,7 +202,7 @@ class Donate(models.Model):
 
     class Meta:
         verbose_name_plural = '捐赠'
-
+        ordering = ('-time',)        
 
 class MoneyCode(models.Model):
     '''充值码'''

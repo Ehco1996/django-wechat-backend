@@ -265,7 +265,7 @@ def userinfo_edit(request):
 
 def donate(request):
     '''跳转到捐赠界面'''
-    donatelist = Donate.objects.all()
+    donatelist = Donate.objects.all()[:15]
 
     context = {'donatelist': donatelist, }
 
@@ -370,7 +370,8 @@ def charge(request):
                 code.isused = True
                 user.save()
                 code.save()
-
+                # 将充值记录和捐赠绑定
+                donate =Donate.objects.create(user=user, money=code.number)                
                 registerinfo = {
                     'title': '充值成功！',
                     'subtitle': '请去商店购买商品！',
