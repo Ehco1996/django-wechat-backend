@@ -16,6 +16,7 @@ from shadowsocks.tools import get_short_random_string
 
 PLAN_CHOICES = (
     ('free', 'Free'),
+    ('prt','pro')
 )
 METHOD_CHOICES = (
     ('aes-256-cfb', 'aes-256-cfb'),

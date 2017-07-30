@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.hashers import make_password, check_password
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 # 自己写的小脚本 用于生成邀请码
 from .tools import get_long_random_string, get_short_random_string
 
@@ -54,6 +54,16 @@ class User(AbstractUser):
         max_length=40,
     )
 
+    # 最高等级限制为9级，和节点等级绑定
+    level = models.PositiveIntegerField(
+        '用户等级',
+        default=0,
+        validators=[
+            MaxValueValidator(9),
+            MinValueValidator(0),
+        ]
+    )
+
     def __str__(self):
         return self.username
 
@@ -92,6 +102,15 @@ class Node(models.Model):
         '状态', max_length=32, default='ok', choices=STATUS_CHOICES,)
 
     node_id = models.IntegerField('节点id', primary_key=True,)
+
+    level = models.PositiveIntegerField(
+        '节点等级',
+        default=0,
+        validators=[
+            MaxValueValidator(9),
+            MinValueValidator(0),
+        ]
+    )
 
     def __str__(self):
         return self.name
@@ -202,7 +221,8 @@ class Donate(models.Model):
 
     class Meta:
         verbose_name_plural = '捐赠'
-        ordering = ('-time',)        
+        ordering = ('-time',)
+
 
 class MoneyCode(models.Model):
     '''充值码'''
@@ -221,7 +241,7 @@ class MoneyCode(models.Model):
 
     code = models.CharField(
         '充值码',
-        primary_key=True,
+        unique=True,
         blank=True,
         max_length=40,
         default=get_long_random_string
@@ -242,7 +262,7 @@ class MoneyCode(models.Model):
     )
 
     def clean(self):
-        # 保证邀请码不会重复
+        # 保证充值码不会重复
         code_length = len(self.code or '')
         if 0 < code_length < 12:
             self.code = '{}{}'.format(
@@ -250,9 +270,7 @@ class MoneyCode(models.Model):
                 get_long_random_string()
             )
         else:
-            self.code = None
-
-
+            self.code = get_long_random_string()
 
     def __str__(self):
         return self.code
@@ -285,6 +303,14 @@ class Shop(models.Model):
         blank=True,
     )
 
+    level = models.PositiveIntegerField(
+        '设置等级',
+        default=0,
+        validators=[
+            MaxValueValidator(9),
+            MinValueValidator(0),
+        ]
+    )
     def __str__(self):
         return self.name
 

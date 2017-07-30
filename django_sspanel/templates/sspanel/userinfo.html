@@ -36,7 +36,7 @@
 
             <div class="tile box is-child">
                 <article class="article notification is-light">
-                    <p class="subtitle">用户信息:</p>
+                    <p class="subtitle">流量信息:</p>
                     <hr>
                     <li>使用流量: {{ ss_user.get_traffic }} MB </li>
                     <li>总流量: {{ ss_user.get_transfer }} MB </li>
@@ -52,10 +52,20 @@
                 <hr>
                 <li> 端口：<code>{{ ss_user.port }}</code></li>
                 <li> 密码：<code>{{ ss_user.password }}</code></li>
+                <li> 混淆：<code>{{ ss_user.obfs }}</code></li>
+                <li> 协议：<code>{{ ss_user.protocal }}</code></li>                
                 <li>上次使用: {{ ss_user.get_last_use_time|date:"m月d日G点" }}</li>
                 <br>
                 <a class="button is-link " href="{% url 'shadowsocks:nodeinfo' %}">详细节点信息请点击这里</a>
                 </div>
+
+                <div class="notification is-light">
+                <h3 class="subtitle">个人信息：</h3>
+                <hr>
+                <li> 余额：<code>{{ user.balance }} 元</code></li>
+                <li> 邮箱：<code>{{ user.email }} </code></li>
+                <li> 等级：<code>{{ user.level }} 级 </code></li>                
+                                
             </div>
         </div>
     </div>

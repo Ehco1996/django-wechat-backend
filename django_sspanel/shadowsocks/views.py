@@ -67,7 +67,7 @@ def nodeinfo(request):
     # 将节点信息查询结果保存dict中，方便增加在线人数字段
     nodes = Node.objects.values()
     ss_user = request.user.ss_user
-
+    user = request.user
     Alive = Aliveip.objects.all()
     # 循环遍历没一条线路的在线人数
     for node in nodes:
@@ -77,6 +77,7 @@ def nodeinfo(request):
     context = {
         'nodelists': nodelists,
         'ss_user': ss_user,
+        'user':user,
     }
 
     return render(request, 'sspanel/nodeinfo.html', context=context)
@@ -149,7 +150,7 @@ def Login_view(request):
                     'status': 'success',
                 }
                 context = {
-                    'registerinfo': registerinfo
+                    'registerinfo': registerinfo,
                 }
                 return render(request, 'sspanel/userinfo.html', context=context)
             else:
@@ -188,10 +189,11 @@ def Logout_view(request):
 @login_required
 def userinfo(request):
     '''用户中心'''
-
+    user = request.user
     ss_user = request.user.ss_user
     context = {
         'ss_user': ss_user,
+        'user':user,
     }
 
     return render(request, 'sspanel/userinfo.html', context=context)
@@ -304,12 +306,14 @@ def purchase(request, goods_id):
         return render(request, 'sspanel/shop.html', context=context)
 
     else:
+        # 验证成功进行提权操作
         ss_user.transfer_enable += good.transfer
         user.balance -= good.money
+        user.level = good.level
         ss_user.save()
         user.save()
         registerinfo = {
-            'title': '充值成功',
+            'title': '够买成功',
             'subtitle': '即将跳转回用户中心',
             'status': 'success', }
 

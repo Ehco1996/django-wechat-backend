@@ -25,6 +25,7 @@
 
             <div class="tile box is-child">
                 <p class="title">修改连接密码</p>
+                <p class="subtitle">密码要6位数以上才安全!</p>
                 <p class="subtitle">当前密码:<code>{{ ss_user.password }}</code></p>
                 <form class="form" action="{% url 'ssserver:changesspass' %}" method="post">
                     {% csrf_token %}

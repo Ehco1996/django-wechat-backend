@@ -100,7 +100,6 @@
                         </p>
                         <ul class="menu-list">
                             <li><a href="/nodeinfo">节点信息</a></li>
-                            <li><a>流量记录</a></li>
                         </ul>
                         <p class="menu-label">
                             交易系统
@@ -109,12 +108,15 @@
                             <li><a href="{% url 'shadowsocks:chargecenter' %}">充值界面</a></li>
                             <li><a href="{% url 'shadowsocks:shop' %}">商品界面</a></li>
                         </ul>
+                        
+                        {% if perms.shadowsocks %}
                         <p class="menu-label">
                             管理面板
                         </p>
                         <ul class="menu-list">
                             <li><a href="/admin">默认后台管理</a></li>
                         </ul>
+                        {% endif %}
                     </aside>
                     {% else %}
                     <article class="message is-primary">
