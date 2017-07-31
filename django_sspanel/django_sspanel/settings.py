@@ -10,8 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-import os
-
+import os,platform
+# 导入自定义设定文件
+if platform.node()=='EhcodeMBP.lan':
+    from .simple_setting_local import *
+else:
+    from.simple_setting_product import *
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -74,31 +78,8 @@ WSGI_APPLICATION = 'django_sspanel.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+# 详见simple_setting
 
-
-# mysql 设置
-DATABASES = {
-
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sspanel',
-        'USER': 'root',
-        'PASSWORD': '19960202',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        
-    }
-}
-
-
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -142,13 +123,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
-# 其他设置：
+
+# 用户模型设置：
 AUTH_USER_MODEL = 'shadowsocks.User'
 
-# 邮件服务设置：
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# SS面板设置：
-GB = 1024 * 1024 * 1024
-DEFAULT_TRAFFIC = 5 * GB
-START_PORT = 10000
