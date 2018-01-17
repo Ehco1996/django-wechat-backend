@@ -1,8 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 from . import views
 
 
 app_name = 'SS'
 urlpatterns = [
-    url(r'^$', views.wechat, name='wechat'),
+    path('', views.wechat, name='wechat'),
+    path('pay/test/',views.pay_test,name='pay_test')
 ]

@@ -105,3 +105,6 @@ ss_invite.py
 
 django_sspanel/shadowsocks/static/.DS_Store
 .DS_Store
+django_wechat/.vscode/settings.json
+django_wechat/db.sqlite3
+django_wechat/db.sqlite3

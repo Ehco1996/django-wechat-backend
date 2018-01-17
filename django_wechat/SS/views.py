@@ -1,11 +1,9 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from lxml import etree
 from django.utils.encoding import smart_str
 import hashlib
-import time
-
+import json
 from .handle import main_handle
 
 
@@ -54,11 +52,18 @@ def wechat(request):
         # 这里将获取到的非uicode字符转换为可以处理的字符编码
         data = smart_str(request.body)
         xml = etree.fromstring(data)
-
-        # 在控制台输出一下挑调试信息
-        print('**********收到的XML***********\n')
-        print(data)
-
+        # 调用我们的handle函数来处理xml
         response_xml = main_handle(xml)
 
         return HttpResponse(response_xml)
+
+@csrf_exempt
+def pay_test(request):
+    '''测试码支付回调接口'''
+
+    if request.method == "POST":
+        data = request.POST
+        result = json.dumps(data, ensure_ascii=False)
+        return HttpResponse(result, content_type='application/json')
+    else:
+        return HttpResponse('error!')
