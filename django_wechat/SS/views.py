@@ -57,13 +57,17 @@ def wechat(request):
 
         return HttpResponse(response_xml)
 
+
 @csrf_exempt
 def pay_test(request):
     '''测试码支付回调接口'''
 
     if request.method == "POST":
-        data = request.POST
+        data =request.POST
+        # data = data.items()
+        print(data)
         result = json.dumps(data, ensure_ascii=False)
         return HttpResponse(result, content_type='application/json')
+        # return HttpResponse('pk')
     else:
         return HttpResponse('error!')
