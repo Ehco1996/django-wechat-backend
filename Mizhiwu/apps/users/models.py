@@ -263,15 +263,6 @@ class User(AbstractUser):
 
 class InviteCode(models.Model):
     '''邀请码'''
-    
-    code_type = models.IntegerField(
-        '类型',
-        choices=((1, '公开'), (0, '不公开')),
-        default=1,
-    )
-
-    owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner')
 
     code = models.CharField(
         '邀请码',
@@ -281,15 +272,22 @@ class InviteCode(models.Model):
         default=get_long_random_string
     )
 
-    time_created = models.DateTimeField(
-        '创建时间',
-        editable=False,
-        auto_now_add=True
-    )
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner')
 
     isused = models.BooleanField(
         '是否使用',
         default=False,
+    )
+    code_type = models.IntegerField(
+        '类型',
+        choices=((1, '公开'), (0, '不公开')),
+        default=1,
+    )
+    time_created = models.DateTimeField(
+        '创建时间',
+        editable=False,
+        auto_now_add=True
     )
 
     def __str__(self):
