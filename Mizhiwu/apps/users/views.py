@@ -71,14 +71,25 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.UpdateM
         return user
 
 
-class InviteCodeViewSet(viewsets.ModelViewSet):
+class InviteCodeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    提供邀请码的 `list`, `create`, `retrieve`,`update`,`destroy`操作
+    提供邀请码的 `list`, `create`, `retrieve`操作
     """
     queryset = InviteCode.objects.all()
     serializer_class = InviteCodeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
 
+
+
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        data = serializer.validated_data
+        user = self.request.user
+        num = user.invitecode_num
+        query = InviteCode.objects.filter(owner=user)
+        if len(query) > num:
+            re_dict = {}
+            re_dict["username"] = user.username
+            return Response(re_dict, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            serializer.save(owner=self.request.user)
