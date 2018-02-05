@@ -18,6 +18,7 @@ from django.urls import path, include, re_path
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
+from rest_framework_jwt.views import obtain_jwt_token
 
 
 from users import views
@@ -32,7 +33,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('schema/', schema_view),
     path('docs/', include_docs_urls(title="谜之屋api文档")),
+
+    # session 认证
     path('api-auth/', include('rest_framework.urls')),
-    
+    # jwt token 认证
+    re_path(r'^api-token-auth/', obtain_jwt_token),
+
     re_path(r'^api/', include(router.urls)),
 ]

@@ -273,7 +273,7 @@ class InviteCode(models.Model):
     )
 
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner')
+        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner',help_text='用户ID')
 
     isused = models.BooleanField(
         '是否使用',

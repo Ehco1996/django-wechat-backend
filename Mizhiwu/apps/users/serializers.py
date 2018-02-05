@@ -18,7 +18,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'invite_user', 'balance',
+        fields = ('id','username', 'email', 'invite_user', 'balance',
                   'level', 'level_expire_time', 'theme')
 
 
@@ -80,8 +80,6 @@ class UserRegSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError('邀请码已经被使用了！')
         return code
 
-    # def validated_data
-
     class Meta:
         model = User
         fields = ("username", "email", "password", "code")
@@ -93,3 +91,21 @@ class InviteCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = InviteCode
         fields = '__all__'
+
+
+class InviteCodeCreateSerializer(serializers.ModelSerializer):
+    def validate_owner(self, owner):
+        '''
+        验证可生成邀请码的数量
+        '''
+        code_query = InviteCode.objects.filter(owner=owner)
+        user = User.objects.get(username=owner)
+        if user.is_staff == True:
+            return owner
+        if len(code_query) > user.invitecode_num:
+            raise serializers.ValidationError('已到当前用户可以生成邀请码的最大数量')
+        return owner
+
+    class Meta:
+        model = InviteCode
+        fields = ('owner',)
