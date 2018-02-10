@@ -16,8 +16,8 @@ import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # 增加apps路径
-sys.path.insert(0,BASE_DIR)
-sys.path.insert(0,os.path.join(BASE_DIR, 'apps'))
+sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'users',
+    'apps.trade',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mizhiwu',
         'USER': 'root',
-        'PASSWORD': 'xx',
+        'PASSWORD': '19960202',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'OPTIONS': {
@@ -141,17 +142,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
 
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework.authentication.BasicAuthentication',
-#     ),
-# }
-
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
 
 
 # 用户模型设置：

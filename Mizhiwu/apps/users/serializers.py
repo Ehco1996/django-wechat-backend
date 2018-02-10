@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from .models import InviteCode
+from apps.trade.models import MoneyCode
 
 # 获取当前用户模型
 User = get_user_model()
@@ -18,8 +19,8 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id','username', 'email', 'invite_user', 'balance',
-                  'level', 'level_expire_time', 'theme')
+        fields = ('id', 'username', 'email', 'invite_user', 'balance',
+                  'level', 'level_expire_time', 'theme', 'get_check_in')
 
 
 class UserSsConfigSerializer(serializers.ModelSerializer):
@@ -83,6 +84,33 @@ class UserRegSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "email", "password", "code")
+
+
+class UserChargeSerializer(serializers.ModelSerializer):
+    '''
+    用户充值
+    '''
+    code = serializers.CharField(required=True, write_only=True, label="充值码",
+                                 error_messages={
+                                     "blank": "请输入充值",
+                                     "required": "请输入充值码",
+                                     "max_length": "邀请充值误",
+                                     "min_length": "邀请充值误"
+                                 },
+                                 help_text="充值码")
+
+    def validate_code(self, code):
+        '''
+        验证充值码
+        '''
+        if not MoneyCode.objects.filter(code=code, isused=False).exists():
+            raise serializers.ValidationError('充值码不正确')
+        else:
+            return code
+
+    class Meta:
+        model = User
+        fields = ("id", "code",)
 
 
 class InviteCodeSerializer(serializers.ModelSerializer):

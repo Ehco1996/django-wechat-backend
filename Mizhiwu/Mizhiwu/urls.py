@@ -21,12 +21,16 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_jwt.views import obtain_jwt_token
 
 
-from users import views
+from users import views as user_view
+from trade import views as trade_view
 
+# router相关
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet, base_name='users')
-router.register(r'invitecodes', views.InviteCodeViewSet,
+router.register(r'users', user_view.UserViewSet, base_name='users')
+router.register(r'invitecodes', user_view.InviteCodeViewSet,
                 base_name='invitecodes')
+router.register(r'moneycodes', trade_view.MoneyCodeViewSet,
+                base_name='moneycodes')
 
 schema_view = get_schema_view(title='谜之屋API Schema')
 urlpatterns = [
@@ -38,6 +42,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # jwt token 认证
     re_path(r'^api-token-auth/', obtain_jwt_token),
-
+    # api路由
     re_path(r'^api/', include(router.urls)),
 ]

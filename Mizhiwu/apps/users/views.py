@@ -12,14 +12,15 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
 from .models import InviteCode
+from apps.trade.models import MoneyCode
 from .permissions import IsOwnerOrReadOnly
-from .serializers import UserInfoSerializer, UserRegSerializer, InviteCodeSerializer, InviteCodeCreateSerializer
+from .serializers import UserInfoSerializer, UserRegSerializer, InviteCodeSerializer, InviteCodeCreateSerializer, UserChargeSerializer
 
 # 获取当前用户模型
 User = get_user_model()
 
 
-class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,  mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     提供用户信息的`list`, `create`,`retrive`操作
     """
@@ -36,6 +37,8 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,mixins.Retrieve
             return UserInfoSerializer
         elif self.action == "create":
             return UserRegSerializer
+        elif self.action == 'update':
+            return UserChargeSerializer
         return UserInfoSerializer
 
     def get_permissions(self):
@@ -45,7 +48,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,mixins.Retrieve
         if self.action == 'list':
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [permissions.IsAuthenticated,IsOwnerOrReadOnly]
+            permission_classes = [permissions.IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
@@ -86,6 +89,31 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,mixins.Retrieve
         )
         return user
 
+    def update(self, request, *args, **kwargs):
+        '''
+        用户充值操作
+        '''
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = self.perform_update(serializer)
+        re_dict = serializer.data
+        re_dict['user'] = user.username
+        re_dict['balance'] = user.balance
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_200_OK, headers=headers)
+
+    def perform_update(self, serializer):
+        data = serializer.validated_data
+        code = MoneyCode.objects.get(code=data['code'])
+        user = User.objects.get(username=self.request.user)
+        user.balance += code.number
+        user.save()
+        code.isused = True
+        code.user = user.username
+        code.save()
+        return user
+
 
 class InviteCodeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
@@ -113,7 +141,8 @@ class InviteCodeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.R
         if self.action == 'list':
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [permissions.IsAuthenticated,IsOwnerOrReadOnly]
+            permission_classes = [
+                permissions.IsAuthenticated, IsOwnerOrReadOnly]
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
