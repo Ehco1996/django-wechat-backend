@@ -92,10 +92,10 @@ class UserChargeSerializer(serializers.ModelSerializer):
     '''
     code = serializers.CharField(required=True, write_only=True, label="充值码",
                                  error_messages={
-                                     "blank": "请输入充值",
+                                     "blank": "请输入充值码",
                                      "required": "请输入充值码",
-                                     "max_length": "邀请充值误",
-                                     "min_length": "邀请充值误"
+                                     "max_length": "充值错误",
+                                     "min_length": "充值错误"
                                  },
                                  help_text="充值码")
 
@@ -103,6 +103,7 @@ class UserChargeSerializer(serializers.ModelSerializer):
         '''
         验证充值码
         '''
+        print(code)
         if not MoneyCode.objects.filter(code=code, isused=False).exists():
             raise serializers.ValidationError('充值码不正确')
         else:
