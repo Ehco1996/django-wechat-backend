@@ -40,7 +40,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
             return UserInfoSerializer
         elif self.action == "create":
             return UserRegSerializer
-        elif self.action == "chrage":
+        elif self.action == "charge":
             return UserChargeSerializer
         elif self.action == 'purchase':
             return UserPurchaseSerializer
@@ -94,8 +94,8 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
         )
         return user
 
-    @detail_route(methods=['PUT'], url_name='chrage-by-code')
-    def chrage(self, request, pk):
+    @detail_route(methods=['PUT'], url_name='moneycode', url_path='moneycode/(?P<code>.+)')
+    def charge(self, request, pk, code=None):
         '''
         用户充值操作
         '''
@@ -119,8 +119,8 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_200_OK, headers=headers)
 
-    @detail_route(methods=['PUT'])
-    def purchase(self, request, pk):
+    @detail_route(methods=['PUT'], url_name='purchase', url_path='goods/(?P<good>.+)')
+    def purchase(self, request, pk, good=None):
         '''
         购买逻辑
         '''
