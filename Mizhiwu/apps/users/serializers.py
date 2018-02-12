@@ -2,9 +2,11 @@ from rest_framework.validators import UniqueValidator
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from rest_framework.fields import CurrentUserDefault
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import InviteCode
-from apps.trade.models import MoneyCode
+from apps.trade.models import MoneyCode, Goods
 
 # 获取当前用户模型
 User = get_user_model()
@@ -103,7 +105,6 @@ class UserChargeSerializer(serializers.ModelSerializer):
         '''
         验证充值码
         '''
-        print(code)
         if not MoneyCode.objects.filter(code=code, isused=False).exists():
             raise serializers.ValidationError('充值码不正确')
         else:
@@ -112,6 +113,38 @@ class UserChargeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "code",)
+
+
+class UserPurchaseSerializer(serializers.ModelSerializer):
+    '''
+    用户购买商品
+    '''
+    good = serializers.CharField(required=True, write_only=True, label="商品id",
+                                 error_messages={
+                                     "blank": "请输入商品id",
+                                     "required": "请输入商品id",
+                                     "max_length": "请输入商品id",
+                                     "min_length": "请输入商品id"
+                                 },
+                                 help_text="商品id")
+
+    def validate_good(self, good):
+        '''
+        验证账户是有有钱
+        '''
+        user = self.context['request'].user
+        try:
+            good = Goods.objects.get(pk=good)
+            if user.balance < good.number:
+                raise serializers.ValidationError('账户金额不足')
+            else:
+                return good
+        except ObjectDoesNotExist:
+            raise serializers.ValidationError('该商品不存在')
+
+    class Meta:
+        model = User
+        fields = ('good', 'id',)
 
 
 class InviteCodeSerializer(serializers.ModelSerializer):

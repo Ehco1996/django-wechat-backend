@@ -8,20 +8,22 @@ from rest_framework.response import Response
 from rest_framework import mixins
 from rest_framework import status
 from rest_framework.decorators import detail_route
-from django.contrib.auth import get_user_model
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from .models import InviteCode
-from apps.trade.models import MoneyCode
+from apps.trade.models import MoneyCode, Goods, PurchaseHistory
 from .permissions import IsOwnerOrReadOnly
-from .serializers import UserInfoSerializer, UserRegSerializer, InviteCodeSerializer, InviteCodeCreateSerializer, UserChargeSerializer
+from .serializers import UserInfoSerializer, UserRegSerializer, InviteCodeSerializer, InviteCodeCreateSerializer, UserChargeSerializer, UserPurchaseSerializer
+
 
 # 获取当前用户模型
 User = get_user_model()
 
 
-class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin,  mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     提供用户信息的`list`, `create`,`retrive`操作
     """
@@ -40,6 +42,8 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
             return UserRegSerializer
         elif self.action == "chrage":
             return UserChargeSerializer
+        elif self.action == 'purchase':
+            return UserPurchaseSerializer
         return UserInfoSerializer
 
     def get_permissions(self):
@@ -114,6 +118,33 @@ class UserViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
         re_dict['balance'] = user.balance
         headers = self.get_success_headers(serializer.data)
         return Response(re_dict, status=status.HTTP_200_OK, headers=headers)
+
+    @detail_route(methods=['PUT'])
+    def purchase(self, request, pk):
+        '''
+        购买逻辑
+        '''
+        user = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # 逻辑部分
+        data = serializer.validated_data
+        good = data['good']
+        user.balance -= good.number
+        user.level = good.level
+        user.transfer_enable += good.transfer * settings.GB
+        user.save()
+        PurchaseHistory.objects.create(
+            user=user, number=good.number, info=good)
+
+        re_dict = serializer.data
+        re_dict['user'] = user.username
+        re_dict['balance'] = user.balance
+        re_dict['transfer_enable'] = user.transfer_enable/settings.GB
+        headers = self.get_success_headers(serializer.data)
+        return Response(re_dict, status=status.HTTP_200_OK, headers=headers)
+        # return Response('ok')
 
 
 class InviteCodeViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

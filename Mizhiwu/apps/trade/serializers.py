@@ -1,9 +1,10 @@
 from rest_framework.validators import UniqueValidator
-
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.conf import settings
 
-from apps.trade.models import MoneyCode
+
+from apps.trade.models import MoneyCode, Goods, PurchaseHistory
+from users.serializers import UserInfoSerializer
 
 
 class MoneyCodeSerializer(serializers.ModelSerializer):
@@ -12,21 +13,17 @@ class MoneyCodeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChagreSerializer(serializers.Serializer):
-    '''
-    充值请求序列话
-    '''
-    user_id = serializers.IntegerField(help_text='用户id')
-    code = serializers.CharField(help_text='充值码')
+class GoodsSerializer(serializers.ModelSerializer):
 
     class Meta:
-        fields = ('user_id', 'code')
+        model = Goods
+        fields = '__all__'
 
-    def validated_code(self, code):
-        '''
-        验证充值码
-        '''
-        if not MoneyCode.objects.filter(code=code, isused=False).exists():
-            raise serializers.ValidationError('充值码不正确')
-        else:
-            return code
+
+class PurchaseHistorySerializer(serializers.ModelSerializer):
+    user = UserInfoSerializer()
+    info = GoodsSerializer()
+
+    class Meta:
+        model = PurchaseHistory
+        fields = '__all__'

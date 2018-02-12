@@ -31,6 +31,11 @@ router.register(r'invitecodes', user_view.InviteCodeViewSet,
                 base_name='invitecodes')
 router.register(r'moneycodes', trade_view.MoneyCodeViewSet,
                 base_name='moneycodes')
+router.register(r'goods', trade_view.GoodsViewSet,
+                base_name='goods')
+router.register(r'purchaselog', trade_view.PurchaseHistoryViewSet,
+                base_name='purchaselog')
+
 
 schema_view = get_schema_view(title='谜之屋API Schema')
 urlpatterns = [
