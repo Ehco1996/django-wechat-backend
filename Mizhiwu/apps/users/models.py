@@ -41,12 +41,6 @@ OBFS_CHOICES = (
     ('tls1.2_ticket_auth', 'tls1.2_ticket_auth'),
 )
 
-STATUS_CHOICES = (
-    ('好用', '好用'),
-    ('维护', '维护'),
-    ('坏了', '坏了'),
-)
-
 
 class User(AbstractUser):
     '''SS账户模型'''
@@ -273,7 +267,7 @@ class InviteCode(models.Model):
     )
 
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner',help_text='用户ID')
+        User, on_delete=models.CASCADE, verbose_name='创建者', related_name='code_owner', help_text='用户ID')
 
     isused = models.BooleanField(
         '是否使用',
