@@ -1,49 +1,25 @@
-'''
-处理自动回复逻辑
-
-每个消息都经过main_handl函数进行处理
-
-replay_rules 是外部资源文件。
-用来存储一个符合自动回复规则的字典
-
-'''
+import time
+import logging
 
 from django.template.loader import render_to_string
-import time
-import random
-# 引入自动回复字典文件
-from .replay_rules import rules
-# 引入外部处理函数
-from .invitecode import get_invite_code
-from .qiubai import get_joke
 
-nav_bar = '''公众号正在开发中...
- 
-回复「指南」
-即可获得精品文章
+from app import constants
+from app.wechat.qiubai import get_joke
+from app.wechat.replay_rules import rules
+from app.wechat.invitecode import get_invite_code
 
-回复「爬虫」
-即可获得相关文章
-
-回复「邀请码」
-即可获得谜之屋邀请码
-
-回复「谜之屋」
-即可获得网站地址
-
-回复「段子/来个段子」
-即可获新鲜的段子
-'''
+logger = logging.getLogger('default')
 
 
 def main_handle(xml):
     # 找到传来的消息事件：
     # 如果普通用户发来短信，则event字段不会被捕捉
+    logger.info('xml: {}'.format(str(xml)))
+
     try:
         event = xml.find('Event').text
     except:
         event = 'none'
-
     try:
         # 找到此次传送的消息信息的类型和内容
         msg_type = xml.find('MsgType').text
@@ -52,9 +28,8 @@ def main_handle(xml):
         msg_type = ''
         msg_content = ''
 
-    # 后台打印一下日志
-    print('**********收到的数据***********')
-    print(msg_type, event, '\n文本内容：', msg_content)
+    logger.info("msg_type: {} event: {} content:{}".format(
+        msg_type, event, msg_content))
 
     # 判断是否是新关注的用户
     if event == 'subscribe':
@@ -77,8 +52,7 @@ def main_handle(xml):
             return parser_text(xml, text)
         # 当不属于规则是，返回一个功能引导菜单
         else:
-            return parser_text(xml, text=nav_bar)
-
+            return parser_text(xml, text=constants.NAV_BAR)
     else:
         return 'success'
 
@@ -88,11 +62,10 @@ def parser_text(xml, text):
     处理微信发来的文本数据
     返回处理过的xml
     '''
-    # print(text)
-    # 我们反转发件人和收件人的消息
+    # 反转发件人和收件人的消息
     fromUser = xml.find('ToUserName').text
     toUser = xml.find('FromUserName').text
-    # event事件是咩有msg id 的
+    # event事件是没有有msg id 的
     try:
         message_id = xml.find('MsgId').text
     except:
@@ -108,6 +81,6 @@ def parser_text(xml, text):
         'id': message_id,
     }
     # 我们来构造需要返回的xml
-    respose_xml = render_to_string('SS/wx_text.xml', context=context)
+    respose_xml = render_to_string('wechat/wx_text.xml', context=context)
 
     return respose_xml

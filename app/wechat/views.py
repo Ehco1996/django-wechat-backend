@@ -1,18 +1,15 @@
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from lxml import etree
-from django.utils.encoding import smart_str
 import hashlib
-import json
-from .handle import main_handle
+import logging
 
+from lxml import etree
+from django.http import HttpResponse
+from django.utils.encoding import smart_str
+from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
+from app import constants
+from app.wechat.handle import main_handle
 
-# 公众号自定义的token
-TOKEN = 'ehcotest2017'
-
-# csrf_exempt 标记是为了取消django自带的csrf标记
+logger = logging.getLogger('default')
 
 
 @csrf_exempt
@@ -22,16 +19,21 @@ def wechat(request):
     微信验证的消息是以GET方式获得的
     平时的收发则以POST的方式
     '''
-
     if request.method == 'GET':
         # 我们来获取微信给我们发送的验证消息
         signature = request.GET.get('signature', None)
         timestamp = request.GET.get('timestamp', None)
         nonce = request.GET.get('nonce', None)
         echostr = request.GET.get('echostr', None)
-        token = TOKEN
+        token = constants.WECHAT_TOKEN
 
-        # 按照微信的验证要求将token字段timestamp、nonce字段惊醒字典顺序排序
+        logger.info("signature:{} timestamp:{} nonce: {} echostr:{}".format(
+            signature, timestamp, nonce, echostr))
+
+        if signature is None:
+            return HttpResponse()
+
+        # 按照微信的验证要求将token 、timestamp、nonce字段按顺序排序
         # 将三个参数字符串拼接成一个字符串进行sha1加密
         # 获得加密后的字符串可与signature对比，标识该请求来源于微信
         tmp_list = [token, timestamp, nonce]
@@ -48,7 +50,6 @@ def wechat(request):
 
     if request.method == 'POST':
         # 从微信服务器获得转发来的各种消息
-
         # 这里将获取到的非uicode字符转换为可以处理的字符编码
         data = smart_str(request.body)
         xml = etree.fromstring(data)
@@ -56,18 +57,3 @@ def wechat(request):
         response_xml = main_handle(xml)
 
         return HttpResponse(response_xml)
-
-
-@csrf_exempt
-def pay_test(request):
-    '''测试码支付回调接口'''
-
-    if request.method == "POST":
-        data =request.POST
-        # data = data.items()
-        print(data)
-        result = json.dumps(data, ensure_ascii=False)
-        return HttpResponse(result, content_type='application/json')
-        # return HttpResponse('pk')
-    else:
-        return HttpResponse('error!')
