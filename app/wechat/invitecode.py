@@ -1,12 +1,7 @@
-import base64
 import requests
 
-USERNAME = ''
-PORT = 1
-
-URL = 'https://www.ehcozone.ml/api/get/invitecode/'
-TOKEN = base64.b64encode(
-    bytes('{}+{}'.format(USERNAME, PORT), 'utf8')).decode()
+URL = ''
+TOKEN = ''
 
 
 def get_invite_code():

@@ -14,8 +14,6 @@ logger = logging.getLogger('default')
 def main_handle(xml):
     # 找到传来的消息事件：
     # 如果普通用户发来短信，则event字段不会被捕捉
-    logger.info('xml: {}'.format(str(xml)))
-
     try:
         event = xml.find('Event').text
     except:

@@ -52,6 +52,7 @@ def wechat(request):
         # 从微信服务器获得转发来的各种消息
         # 这里将获取到的非uicode字符转换为可以处理的字符编码
         data = smart_str(request.body)
+        logger.info('post data: {}'.format(data))
         xml = etree.fromstring(data)
         # 调用我们的handle函数来处理xml
         response_xml = main_handle(xml)
