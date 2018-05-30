@@ -1,3 +1,1 @@
-* django_wechat
-
-* 谜之屋 (新开坑)
+## 用django搭建微信公众号后端
