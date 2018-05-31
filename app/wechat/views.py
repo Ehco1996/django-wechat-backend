@@ -7,7 +7,7 @@ from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
 
 from app import constants
-from app.wechat.handle import main_handle
+from app.wechat.wechat_handler import main_handler
 
 logger = logging.getLogger('default')
 
@@ -55,6 +55,6 @@ def wechat(request):
         logger.info('post data: {}'.format(data))
         xml = etree.fromstring(data)
         # 调用我们的handle函数来处理xml
-        response_xml = main_handle(xml)
+        response_xml = main_handler(xml)
 
         return HttpResponse(response_xml)
