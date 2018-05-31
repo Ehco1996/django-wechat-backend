@@ -1,7 +1,17 @@
 <xml>
-    <ToUserName><![CDATA[{{ ToUserName }}]]></ToUserName>
-    <FromUserName><![CDATA[{{ FromUserName }}]]></FromUserName>
+    <ToUserName>
+        <![CDATA[{{ ToUserName }}]]>
+    </ToUserName>
+    <FromUserName>
+        <![CDATA[{{ FromUserName }}]]>
+    </FromUserName>
     <CreateTime>{{ time }}</CreateTime>
-    <MsgType><![CDATA[image]]></MsgType>
-    <Image><MediaId>< ![CDATA[{{ media_id }}]]></MediaId></Image>
+    <MsgType>
+        <![CDATA[image]]>
+    </MsgType>
+    <Image>
+        <MediaId>
+            <![CDATA[{{ media_id }}]]>
+        </MediaId>
+    </Image>
 </xml>

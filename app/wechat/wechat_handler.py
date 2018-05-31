@@ -29,10 +29,7 @@ def main_handler(xml):
     if event == 'subscribe':
         text = constants.SUBSCRIBE_TEXT
         return parse_text(xml, text)
-
-    if msg_type == 'image':
-        parse_image(xml)
-    elif msg_type == 'text':
+    if msg_type == 'text':
         # 当收到的信息在处理规则之中时
         if msg_content == '邀请码':
             text = get_invite_code()
