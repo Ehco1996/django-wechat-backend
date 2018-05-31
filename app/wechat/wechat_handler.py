@@ -94,4 +94,5 @@ def parse_image(xml):
     }
     # 我们来构造需要返回的xml
     respose_xml = render_to_string('wechat/wx_image.xml', context=context)
+    logger.info(respose_xml)
     return respose_xml
