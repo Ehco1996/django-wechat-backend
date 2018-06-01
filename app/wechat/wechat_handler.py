@@ -32,7 +32,7 @@ def main_handler(xml):
         text = constants.SUBSCRIBE_TEXT
         return parse_text(xml, text)
     if msg_type == 'image':
-        parse_image(xml)
+        return parse_image(xml)
     elif msg_type == 'text':
         # 当收到的信息在处理规则之中时
         if msg_content == '邀请码':
@@ -74,7 +74,7 @@ def parse_text(xml, text):
     }
     # 我们来构造需要返回的xml
     respose_xml = render_to_string('wechat/wx_text.xml', context=context)
-
+    logger.info(respose_xml)
     return respose_xml
 
 
