@@ -19,3 +19,10 @@ NAV_BAR = '''公众号正在开发中...
 '''
 
 SUBSCRIBE_TEXT = '欢迎关注公众号\n回复「指南」即可获得精品文章\n回复 谜之屋 获取免费节点网站地址'
+
+FACE_AGE_API = 'https://api.ai.qq.com/fcgi-bin/ptu/ptu_faceage'
+
+SMS_API = '	https://sm.ms/api/upload'
+
+APP_ID = 1
+APP_KEY = ''

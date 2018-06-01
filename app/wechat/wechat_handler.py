@@ -4,6 +4,8 @@ import logging
 from django.template.loader import render_to_string
 
 from app import constants
+from app.utils import upload_to_sms
+from app.aiqq_api import get_face_age
 from app.wechat.qiubai import get_joke
 from app.wechat.replay_rules import rules
 from app.wechat.invitecode import get_invite_code
@@ -29,7 +31,9 @@ def main_handler(xml):
     if event == 'subscribe':
         text = constants.SUBSCRIBE_TEXT
         return parse_text(xml, text)
-    if msg_type == 'text':
+    if msg_type == 'image':
+        parse_image(xml)
+    elif msg_type == 'text':
         # 当收到的信息在处理规则之中时
         if msg_content == '邀请码':
             text = get_invite_code()
@@ -81,15 +85,25 @@ def parse_image(xml):
     # 反转发件人和收件人的消息
     fromUser = xml.find('ToUserName').text
     toUser = xml.find('FromUserName').text
+    message_id = xml.find('MsgId').text
     nowtime = str(int(time.time()))
-    media_id = xml.find('MediaId').text
+    pic_url = xml.find('PicUrl').text
+
+    # 请求ai.qq.com 识别照片的年龄和颜值
+    resp = get_face_age(pic_url)
+    if resp['ret'] != 0:
+        text = resp['msg']
+    else:
+        smms_resp = upload_to_sms(resp['data']['image'])
+        text = smms_resp['data']['url']
     context = {
         'FromUserName': fromUser,
         'ToUserName': toUser,
+        'Content': text,
         'time': nowtime,
-        'media_id': media_id
+        'id': message_id,
     }
     # 我们来构造需要返回的xml
-    respose_xml = render_to_string('wechat/wx_image.xml', context=context)
+    respose_xml = render_to_string('wechat/wx_text.xml', context=context)
     logger.info(respose_xml)
     return respose_xml
