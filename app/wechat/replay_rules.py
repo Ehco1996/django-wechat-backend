@@ -10,7 +10,7 @@ rules = {
     '路由器': 'http://mp.weixin.qq.com/s/QiOlBCGZmNE7v0Z9Atc5Rg',
     '黑域': "链接:https://pan.baidu.com/s/1gfCEdnt 密码:v2ze",
     '妹纸图': '链接:https://pan.baidu.com/s/1qY2Rbq8 密码:rqv6',
-    '老司机':'链接:http://pan.baidu.com/s/1jH5Cuxg  密码:sp8b',   
+    '老司机':'链接:http://pan.baidu.com/s/1jH5Cuxg  密码:sp8b',
     '妹子图': '链接:https://pan.baidu.com/s/1qY2Rbq8 密码:rqv6',
     '谜之屋': 'https://www.mizhiwu.fun/ 请不要在微信直接打开',
     '迷之屋': 'https://www.mizhiwu.fun/ 请不要在微信直接打开',

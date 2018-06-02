@@ -1,10 +1,11 @@
 import time
 import logging
+from base64 import b64decode
 
 from django.template.loader import render_to_string
 
 from app import constants
-from app.utils import upload_to_sms
+from app.wechat import models as m
 from app.aiqq_api import get_face_age
 from app.wechat.qiubai import get_joke
 from app.wechat.replay_rules import rules
@@ -89,13 +90,15 @@ def parse_image(xml):
     nowtime = str(int(time.time()))
     pic_url = xml.find('PicUrl').text
 
+    img_name = xml.find('MediaId').text + '.png'
+
     # 请求ai.qq.com 识别照片的年龄和颜值
     resp = get_face_age(pic_url)
     if resp['ret'] != 0:
         text = resp['msg']
     else:
-        smms_resp = upload_to_sms(resp['data']['image'])
-        text = smms_resp['data']['url']
+        img_data = b64decode(resp['data']['image'])
+        text = m.UserPic.upload_img(toUser, img_name, img_data)
     context = {
         'FromUserName': fromUser,
         'ToUserName': toUser,
