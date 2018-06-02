@@ -1,6 +1,8 @@
-from django.db import models
+from io import BytesIO
 
-# Create your models here.
+from django.db import models
+from django.core import files
+from django.conf import settings
 
 
 class UserPic(models.Model):
@@ -10,7 +12,22 @@ class UserPic(models.Model):
 
     @property
     def img_url(self):
-        return self.image.url
+        url = settings.HOST_NAME + self.image.url
+        return url
+
+    @classmethod
+    def upload_img(cls, user_id, img_name, img_data):
+        f = BytesIO()
+        f.write(img_data)
+        data = files.File(f)
+        pic = cls()
+        pic.user_id = user_id
+        pic.image.save(img_name, data)
+        return pic.img_url
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()
+        super(UserPic, self).delete(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = '用户图片'
