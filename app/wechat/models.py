@@ -7,6 +7,7 @@ from django.conf import settings
 
 class UserPic(models.Model):
     user_id = models.CharField(max_length=64, blank=True, verbose_name='用户id')
+    media_id = models.CharField(max_length=64, verbose_name='图片id', blank=True)
     image = models.ImageField(upload_to='pics/', verbose_name='图片名字')
     create_at = models.DateTimeField(auto_now=True)
 
@@ -16,12 +17,13 @@ class UserPic(models.Model):
         return url
 
     @classmethod
-    def upload_img(cls, user_id, img_name, img_data):
+    def upload_img(cls, user_id, media_id, img_name, img_data):
         f = BytesIO()
         f.write(img_data)
         data = files.File(f)
         pic = cls()
         pic.user_id = user_id
+        pic.media_id = media_id
         pic.image.save(img_name, data)
         return pic.img_url
 

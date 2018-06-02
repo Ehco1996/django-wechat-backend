@@ -87,18 +87,18 @@ def parse_image(xml):
     fromUser = xml.find('ToUserName').text
     toUser = xml.find('FromUserName').text
     message_id = xml.find('MsgId').text
+    media_id = xml.find('MediaId').text
     nowtime = str(int(time.time()))
     pic_url = xml.find('PicUrl').text
 
-    img_name = xml.find('MediaId').text + '.png'
-
+    img_name = m.UserPic.objects.filter(user_id=toUser).count() + 1
     # 请求ai.qq.com 识别照片的年龄和颜值
     resp = get_face_age(pic_url)
     if resp['ret'] != 0:
         text = resp['msg']
     else:
         img_data = b64decode(resp['data']['image'])
-        text = m.UserPic.upload_img(toUser, img_name, img_data)
+        text = m.UserPic.upload_img(toUser, media_id, img_name, img_data)
     context = {
         'FromUserName': fromUser,
         'ToUserName': toUser,
