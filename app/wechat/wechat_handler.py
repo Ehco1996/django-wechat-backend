@@ -90,8 +90,9 @@ def parse_image(xml):
     media_id = xml.find('MediaId').text
     nowtime = str(int(time.time()))
     pic_url = xml.find('PicUrl').text
+    user_img_count = m.UserPic.objects.filter(user_id=toUser).count()
+    img_name = "{}.png".format(user_img_count)
 
-    img_name = m.UserPic.objects.filter(user_id=toUser).count() + 1
     # 请求ai.qq.com 识别照片的年龄和颜值
     resp = get_face_age(pic_url)
     if resp['ret'] != 0:

@@ -10,7 +10,7 @@ def delete_with_file(modeladmin, request, queryset):
 
 
 class UserPicAdmin(admin.ModelAdmin):
-    list_display = ['user_id', 'image', 'create_at']
+    list_display = ['user_id', 'image', 'media_id', 'create_at']
     search_fields = ['user_id', 'create_at']
     actions = [delete_with_file]
 

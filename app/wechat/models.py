@@ -7,7 +7,7 @@ from django.conf import settings
 
 class UserPic(models.Model):
     user_id = models.CharField(max_length=64, blank=True, verbose_name='用户id')
-    media_id = models.CharField(max_length=64, verbose_name='图片id', blank=True)
+    media_id = models.CharField(max_length=72, verbose_name='图片id', blank=True)
     image = models.ImageField(upload_to='pics/', verbose_name='图片名字')
     create_at = models.DateTimeField(auto_now=True)
 
