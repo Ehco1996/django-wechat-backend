@@ -5,7 +5,7 @@ from django.urls import path, include
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
     path('', admin.site.urls),
-    path('wechat/', include('app.wechat.urls')),
+    path('api/wechat/', include('app.wechat.urls')),
 ]
 
 if settings.DEBUG is True:
