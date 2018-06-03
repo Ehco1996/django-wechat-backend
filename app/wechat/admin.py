@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
+from django.utils.safestring import mark_safe
 
 from . import models
 
@@ -10,9 +11,19 @@ def delete_with_file(modeladmin, request, queryset):
 
 
 class UserPicAdmin(admin.ModelAdmin):
-    list_display = ['user_id', 'image', 'media_id', 'create_at']
+    list_display = ['user_id', 'image', 'display_photo', 'create_at']
     search_fields = ['user_id', 'create_at']
+    readonly_fields = ['display_photo', ]
     actions = [delete_with_file]
+
+    def display_photo(self, obj):
+        return mark_safe('<img src="{url}" width="{width}" height={height} />'.format(
+            url=obj.image.url,
+            width=obj.image.width,
+            height=obj.image.height,
+        ))
+
+    display_photo.allow_tags = True
 
 
 class ReplyRuleAdmin(admin.ModelAdmin):
