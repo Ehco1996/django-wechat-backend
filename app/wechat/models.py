@@ -11,7 +11,7 @@ class UserPic(models.Model):
     user_id = models.CharField(max_length=64, blank=True, verbose_name='用户id')
     media_id = models.CharField(max_length=72, verbose_name='图片id', blank=True)
     image = models.ImageField(upload_to='pics/', verbose_name='图片名字')
-    create_at = models.DateTimeField(auto_now=True)
+    create_at = models.DateTimeField(auto_now=True, verbose_name='添加日期')
 
     @property
     def img_url(self):
