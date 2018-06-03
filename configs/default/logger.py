@@ -1,5 +1,4 @@
 import logging.config
-import os
 
 LOGGING = {
     'version': 1,
@@ -22,7 +21,7 @@ LOGGING = {
     'loggers': {
         'default': {
             'handlers': ['console'],
-            'level': os.getenv('LOGLEVEL', 'INFO').upper(),
+            'level': 'INFO'
         },
     },
 }

@@ -15,7 +15,13 @@ class UserPicAdmin(admin.ModelAdmin):
     actions = [delete_with_file]
 
 
+class ReplyRuleAdmin(admin.ModelAdmin):
+    list_display = ['key_word', 'content', 'create_at']
+    search_fields = ['key_word', ]
+
+
 admin.site.register(models.UserPic, UserPicAdmin)
+admin.site.register(models.ReplyRule, ReplyRuleAdmin)
 
 
 admin.site.unregister(Group)

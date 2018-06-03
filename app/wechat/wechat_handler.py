@@ -7,9 +7,7 @@ from django.template.loader import render_to_string
 from app import constants
 from app.wechat import models as m
 from app.aiqq_api import get_face_age
-from app.wechat.qiubai import get_joke
-from app.wechat.replay_rules import rules
-from app.wechat.invitecode import get_invite_code
+from app.utils import get_invite_code, get_joke
 
 logger = logging.getLogger('default')
 
@@ -32,23 +30,19 @@ def main_handler(xml):
     if event == 'subscribe':
         text = constants.SUBSCRIBE_TEXT
         return parse_text(xml, text)
+
     if msg_type == 'image':
         return parse_image(xml)
     elif msg_type == 'text':
-        # 当收到的信息在处理规则之中时
         if msg_content == '邀请码':
             text = get_invite_code()
             return parse_text(xml, text)
-        # 针对段子特殊处理
-        elif msg_content == '段子' or msg_content == '来个段子':
+        elif msg_content == '段子':
             text = get_joke()
             return parse_text(xml, text)
-        elif msg_content in rules.keys():
-            text = rules[msg_content]
-            return parse_text(xml, text)
-        # 当不属于规则是，返回一个功能引导菜单
         else:
-            return parse_text(xml, text=constants.NAV_BAR)
+            text = m.ReplyRule.get_reply(msg_content)
+            return parse_text(xml, text)
     else:
         return 'success'
 
@@ -75,7 +69,7 @@ def parse_text(xml, text):
     }
     # 我们来构造需要返回的xml
     respose_xml = render_to_string('wechat/wx_text.xml', context=context)
-    logger.info(respose_xml)
+    logger.debug(respose_xml)
     return respose_xml
 
 
@@ -109,5 +103,5 @@ def parse_image(xml):
     }
     # 我们来构造需要返回的xml
     respose_xml = render_to_string('wechat/wx_text.xml', context=context)
-    logger.info(respose_xml)
+    logger.debug(respose_xml)
     return respose_xml

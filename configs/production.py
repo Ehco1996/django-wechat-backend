@@ -7,3 +7,5 @@ SECRET_KEY = 'xxx'
 HOST_NAME = 'xx'
 
 ALLOWED_HOSTS = ['127.0.0.1', ]
+
+LOGGING['loggers']['default']['level'] = 'INFO'
