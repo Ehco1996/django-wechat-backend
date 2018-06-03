@@ -13,6 +13,7 @@ def delete_with_file(modeladmin, request, queryset):
 class UserPicAdmin(admin.ModelAdmin):
     list_display = ['user_id', 'image', 'thumbnail', 'create_at']
     search_fields = ['user_id', 'create_at']
+    list_filter = ['user_id', 'create_at']
     readonly_fields = ['thumbnail', ]
     actions = [delete_with_file]
 

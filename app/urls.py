@@ -3,7 +3,8 @@ from django.conf import settings
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('jet/', include('jet.urls', 'jet')),
+    path('', admin.site.urls),
     path('wechat/', include('app.wechat.urls')),
 ]
 

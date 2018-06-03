@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(
 
 
 INSTALLED_APPS = [
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +64,8 @@ MEDIA_URL = '/media/'
 
 STATIC_URL = '/static_cdn/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
+
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
 
 LANGUAGE_CODE = 'Zh-hans'
 
