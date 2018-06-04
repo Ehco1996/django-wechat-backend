@@ -23,9 +23,15 @@ NAV_BAR = '''
 
 SUBSCRIBE_TEXT = '欢迎关注公众号\n回复「指南」即可获得精品文章\n回复 谜之屋 获取免费节点网站地址'
 
-FACE_AGE_API = 'https://api.ai.qq.com/fcgi-bin/ptu/ptu_faceage'
-
+# smms图床api地址
 SMS_API = '	https://sm.ms/api/upload'
+
+# ai.qq.com
+FACE_AGE_API = 'https://api.ai.qq.com/fcgi-bin/ptu/ptu_faceage'
+TEXT_POLAR_API = 'https://api.ai.qq.com/fcgi-bin/nlp/nlp_textpolar'
 
 APP_ID = 1
 APP_KEY = ''
+
+# bolson
+BOLSON_TOKEN = ''
