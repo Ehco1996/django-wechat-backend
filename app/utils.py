@@ -18,8 +18,12 @@ def upload_to_sms(img_content):
 
 
 def get_invite_code():
-    r = requests.post('api_url', data={'token': 'token'})
-    return r.json().get('msg')
+    r = requests.post(constants.INVITE_CODE_API, json={
+                      'token': constants.MIZHIWU_TOKEN})
+    if r.status_code:
+        return r.json().get('msg')
+    else:
+        return 'something wrong'
 
 
 def get_html_text(url):

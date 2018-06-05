@@ -35,3 +35,7 @@ APP_KEY = ''
 
 # bolson
 BOLSON_TOKEN = ''
+
+# mizhiwu.fun
+INVITE_CODE_API = ''
+MIZHIWU_TOKEN = ''
