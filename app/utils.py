@@ -30,7 +30,7 @@ def get_html_text(url):
     try:
         r = requests.get(url, timeout=3)
         r.raise_for_status()
-        r.encoding = r.apparent_encoding
+        r.encoding = 'utf-8'
         return r.text
     except:
         return 'something wrong'
