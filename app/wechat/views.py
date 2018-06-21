@@ -2,11 +2,12 @@ import hashlib
 import logging
 
 from lxml import etree
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
 
 from app import constants
+from app.utils import check_server
 from app.wechat.wechat_handler import main_handler
 
 logger = logging.getLogger('default')
@@ -58,3 +59,10 @@ def wechat(request):
         response_xml = main_handler(xml)
 
         return HttpResponse(response_xml)
+
+
+def check_server_api(request):
+    ip = request.GET.get('ip')
+    port = request.GET.get('port')
+    data = {'msg': check_server(ip, int(port))}
+    return JsonResponse(data=data)

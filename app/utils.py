@@ -1,3 +1,4 @@
+import socket
 import random
 from base64 import b64decode
 
@@ -59,3 +60,16 @@ def get_joke():
     joke = '作者：{}{}热评: {}'.format(author, body, comment)
 
     return joke
+
+
+def check_server(address, port):
+    s = socket.socket()
+    s.settimeout(2.0)
+    try:
+        s.connect((address, port))
+        data = s.recv(4096)
+        s.close()
+        return True
+    except:
+        s.close()
+        return False
