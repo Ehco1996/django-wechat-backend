@@ -63,12 +63,12 @@ def get_joke():
 
 
 def check_server(address, port):
-    s = socket.socket()
+    s = socket.socket(
+        socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(2.0)
     try:
-        s.connect((address, port))
-        data = s.recv(4096)
-        s.close()
+        s.connect((address, int(port)))
+        s.shutdown(socket.SHUT_RD)
         return True
     except:
         s.close()
