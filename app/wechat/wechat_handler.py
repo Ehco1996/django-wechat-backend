@@ -6,10 +6,12 @@ from django.template.loader import render_to_string
 
 from app import constants
 from app.wechat import models as m
+from app.ai import TencentAiHandler
 from app.aiqq_api import get_face_age
 from app.utils import get_invite_code, get_joke
 
 logger = logging.getLogger('default')
+ai = TencentAiHandler(constants.APP_ID, constants.APP_KEY)
 
 
 def main_handler(xml):
@@ -88,7 +90,8 @@ def parse_image(xml):
     img_name = "{}.png".format(user_img_count)
 
     # 请求ai.qq.com 识别照片的年龄和颜值
-    resp = get_face_age(pic_url)
+    # resp = get_face_age(pic_url)
+    resp = ai.get_face_age(pic_url)
     if resp['ret'] != 0:
         text = resp['msg']
     else:
